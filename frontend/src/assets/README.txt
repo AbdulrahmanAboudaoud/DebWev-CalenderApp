@@ -1,0 +1,1 @@
+Store static files like images, icons, fonts

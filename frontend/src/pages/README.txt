@@ -1,0 +1,1 @@
+Each page of the app: Login, Home, Events, Calendar, etc.
