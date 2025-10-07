@@ -27,3 +27,6 @@ backend/bin/Debug/net9.0/backend.staticwebassets.endpoints.json
 backend/bin/Debug/net9.0/backend.pdb
 backend/bin/Debug/net9.0/backend.exe
 backend/bin/Debug/net9.0/backend.dll
+backend/obj/Debug/net9.0/backend.AssemblyInfo.cs
+backend/obj/Debug/net9.0/backend.AssemblyInfoInputs.cache
+backend/obj/Debug/net9.0/backend.GeneratedMSBuildEditorConfig.editorconfig
