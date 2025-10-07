@@ -1,11 +1,11 @@
 {
   "version": 2,
-  "dgSpecHash": "bqVnb64uSy4=",
+  "dgSpecHash": "gC9H0nk3g40=",
   "success": true,
-  "projectFilePath": "/home/telmo/Documents/GitHub/DebWev-CalenderApp/backend/backend.csproj",
+  "projectFilePath": "C:\\Users\\Kacper\\Documents\\GitHub\\DebWev-CalenderApp\\backend\\backend.csproj",
   "expectedPackageFiles": [
-    "/home/telmo/.nuget/packages/microsoft.aspnetcore.openapi/9.0.9/microsoft.aspnetcore.openapi.9.0.9.nupkg.sha512",
-    "/home/telmo/.nuget/packages/microsoft.openapi/1.6.17/microsoft.openapi.1.6.17.nupkg.sha512"
+    "C:\\Users\\Kacper\\.nuget\\packages\\microsoft.aspnetcore.openapi\\9.0.9\\microsoft.aspnetcore.openapi.9.0.9.nupkg.sha512",
+    "C:\\Users\\Kacper\\.nuget\\packages\\microsoft.openapi\\1.6.17\\microsoft.openapi.1.6.17.nupkg.sha512"
   ],
   "logs": []
 }
