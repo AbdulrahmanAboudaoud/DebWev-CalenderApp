@@ -30,3 +30,15 @@ backend/bin/Debug/net9.0/backend.dll
 backend/obj/Debug/net9.0/backend.AssemblyInfo.cs
 backend/obj/Debug/net9.0/backend.AssemblyInfoInputs.cache
 backend/obj/Debug/net9.0/backend.GeneratedMSBuildEditorConfig.editorconfig
+backend/bin
+backend/obj
+backend/bin/Debug/net9.0/backend.dll
+backend/bin/Debug/net9.0/backend.pdb
+backend/obj/Debug/net9.0/backend.AssemblyInfo.cs
+backend/obj/Debug/net9.0/backend.AssemblyInfoInputs.cache
+backend/obj/Debug/net9.0/backend.dll
+backend/obj/Debug/net9.0/backend.pdb
+backend/obj/Debug/net9.0/ref/backend.dll
+backend/obj/Debug/net9.0/refint/backend.dll
+backend/obj/Debug/net9.0/rjsmcshtml.dswa.cache.json
+backend/obj/Debug/net9.0/rjsmrazor.dswa.cache.json
