@@ -113,3 +113,5 @@ artifacts/
 *.db
 
 /backend
+backend/obj/Debug/net9.0/backend.AssemblyInfoInputs.cache
+backend/obj/Debug/net9.0/backend.AssemblyInfo.cs
