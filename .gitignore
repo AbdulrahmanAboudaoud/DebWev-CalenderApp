@@ -4,3 +4,4 @@
 /backend/obj
 DebWev-CalenderApp.sln
 backend/obj/project.nuget.cache
+/node_modules
