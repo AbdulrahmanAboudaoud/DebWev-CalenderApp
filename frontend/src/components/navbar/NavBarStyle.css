@@ -22,13 +22,13 @@
 }
 
 .nav-left {
-    flex: 0 0 auto; /* size to content */
+    flex: 0 0 auto;
     justify-content: flex-start;
     gap: 0.75rem;
 }
 
 .nav-center {
-    flex: 1 1 auto; /* take remaining space and center contents */
+    flex: 1 1 auto;
     justify-content: center;
 }
 
