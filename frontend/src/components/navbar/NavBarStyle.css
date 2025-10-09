@@ -1,20 +1,149 @@
-.logo
-{
-    cursor: pointer;
-    width: 10vw;
-}
-
-.nav_links{
-    list-style: none;
-}
-
-.nav_links li{
-    display: inline-block;
-}
-
-nav {
+.NavBar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
     display: flex;
-    justify-content: space-evenly;
     align-items: center;
-    padding: 20px 5px;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 0.5rem 1rem;
+    background: #FFFFFFFF;
+    box-shadow: 0px 0px 1px #171a1f12, 0px 0px 2px #171a1f1F;
+    z-index: 100;
+}
+
+/* three areas: left (controls), center (links), right (logo + title) */
+.nav-left,
+.nav-center,
+.nav-right {
+    display: flex;
+    align-items: center;
+}
+
+.nav-left {
+    flex: 0 0 auto;
+    justify-content: flex-start;
+    gap: 0.75rem;
+}
+
+.nav-center {
+    flex: 1 1 auto;
+    justify-content: center;
+}
+
+.nav-right {
+    flex: 0 0 auto;
+    justify-content: flex-end;
+    gap: 0.5rem;
+}
+
+.NavBar a {
+    color: inherit;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.NavBar ul {
+    display: flex;
+    padding: 0;
+    margin: 0;
+    list-style: none;
+    gap: 1rem;
+    align-items: center;
+}
+
+.logo {
+    width: 48px;
+    height: auto;
+}
+
+.site-title {
+    font-size: 1.5rem;
+    font-weight: 600;
+    text-decoration: none;
+}
+
+ul li a {
+    display: block;
+    color: black;
+    padding: 8px 12px;
+    border-radius: 6px;
+}
+
+ul li a:active {
+    background-color: #d25271;
+}
+
+ul li a:hover {
+    background-color: #E75A7C;
+    color: #fff;
+}
+
+.bell {
+    height: 24px;
+}
+
+.logoutButton {
+    width: 98px;
+    height: 36px;
+    padding: 0 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    line-height: 22px;
+    font-weight: 400;
+    color: #FFFFFFFF;
+    background: #E75A7CFF;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.logoutButton:hover {
+    background: #E33D64FF;
+}
+
+.logoutButton:active {
+    background: #C41C43FF;
+}
+
+.button:disabled {
+    opacity: 0.4;
+}
+
+/* Responsive: on narrow screens stack center links and keep logo+title visible */
+@media (max-width: 720px) {
+    .NavBar {
+        flex-wrap: wrap;
+        padding: 0.5rem;
+    }
+
+    .nav-left {
+        order: 1;
+        width: 100%;
+        justify-content: space-between;
+    }
+
+    .nav-center {
+        order: 2;
+        width: 100%;
+        justify-content: center;
+        margin-top: 0.5rem;
+    }
+
+    .nav-right {
+        order: 3;
+        width: 100%;
+        justify-content: flex-end;
+        margin-top: 0.25rem;
+    }
+
+    ul {
+        flex-wrap: wrap;
+        gap: 0.5rem;
+    }
 }
