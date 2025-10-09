@@ -55,3 +55,8 @@ local.settings.json
 publish/
 artifacts/
 *.db
+package-lock.json
+package.json
+DebWev-CalenderApp.sln
+*.csproj
+backend/appsettings.json
