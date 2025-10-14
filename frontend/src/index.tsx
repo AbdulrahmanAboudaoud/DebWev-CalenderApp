@@ -1,21 +1,65 @@
+// src/index.tsx
 import React from "react";
 import ReactDOM from "react-dom/client";
 import "./index.css";
-import Login from "./pages/Login/Login";
-import reportWebVitals from "./reportWebVitals";
-import Navbar from "./components/navbar/navbar-complete"
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 
-const root = ReactDOM.createRoot(
-  document.getElementById("root") as HTMLElement
-);
+import AuthLayout from "./layouts/AuthLayout";
+import UserLayout from "./layouts/UserLayout";
+import AdminLayout from "./layouts/AdminLayout";
+
+// Public
+import Login from "./pages/Login/Login";
+
+// User pages
+import Home from "./pages/user/Home/Home";
+import Events from "./pages/user/Events/Events";
+import EventDetail from "./pages/user/Events/EventDetail";
+import RoomBooking from "./pages/user/Rooms/RoomBooking";
+import Attendance from "./pages/user/Attendance/Attendance";
+
+// Admin pages
+import AdminHome from "./pages/admin/Home/AdminHome";
+import AdminEvents from "./pages/admin/Events/AdminEvents";
+import AdminEventDetail from "./pages/admin/Events/AdminEventDetail";
+import AdminRoomBooking from "./pages/admin/Rooms/AdminRoomBooking";
+import Users from "./pages/admin/Users/Users";
+
+const root = ReactDOM.createRoot(document.getElementById("root") as HTMLElement);
+
 root.render(
   <React.StrictMode>
-    <Navbar/>
-    <Login/>
+    <BrowserRouter>
+      <Routes>
+        {/* Auth / public */}
+        <Route element={<AuthLayout />}>
+          <Route path="/" element={<Navigate to="/login" replace />} />
+          <Route path="/login" element={<Login />} />
+        </Route>
+
+        {/* User app */}
+        <Route path="/app" element={<UserLayout />}>
+          <Route index element={<Home />} />
+          <Route path="home" element={<Home />} />
+          <Route path="events" element={<Events />} />
+          <Route path="events/:eventId" element={<EventDetail />} />
+          <Route path="room-booking" element={<RoomBooking />} />
+          <Route path="attendance" element={<Attendance />} />
+        </Route>
+
+        {/* Admin app */}
+        <Route path="/admin" element={<AdminLayout />}>
+          <Route index element={<AdminHome />} />
+          <Route path="home" element={<AdminHome />} />
+          <Route path="events" element={<AdminEvents />} />
+          <Route path="events/:eventId" element={<AdminEventDetail />} />
+          <Route path="room-booking" element={<AdminRoomBooking />} />
+          <Route path="users" element={<Users />} />
+        </Route>
+
+        {/* 404 */}
+        <Route path="*" element={<div style={{ padding: 24 }}>404 — Page not found</div>} />
+      </Routes>
+    </BrowserRouter>
   </React.StrictMode>
 );
-
-// If you want to start measuring performance in your app, pass a function
-// to log results (for example: reportWebVitals(console.log))
-// or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
-reportWebVitals();

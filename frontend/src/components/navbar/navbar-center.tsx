@@ -1,26 +1,26 @@
 import React from "react";
-import logo from "../../assets/cute-calendar-sticker-free-png-4225752480.png";
+import { NavLink } from "react-router-dom";
 import "./NavBarStyle.css";
-import notification from "../../assets/notification.png";
 
 function NavbarCenter() {
+  const linkClass = ({ isActive }: { isActive: boolean }) =>
+    isActive ? "nav-link active" : "nav-link";
+
   return (
-      <div className="nav-center">
-        <ul className="links">
-          <li>
-            <a href={"/home"}>Home</a>
-          </li>
-          <li>
-            <a href={"/booking"}>Room Booking</a>
-          </li>
-          <li>
-            <a href={"/events"}>Events</a>
-          </li>
-          <li>
-            <a href={"/attendance"}>Attendance</a>
-          </li>
-        </ul>
-      </div>
+    <ul className="links">
+      <li>
+        <NavLink to="/app/home" className={linkClass}>Home</NavLink>
+      </li>
+      <li>
+        <NavLink to="/app/room-booking" className={linkClass}>Room Booking</NavLink>
+      </li>
+      <li>
+        <NavLink to="/app/events" className={linkClass}>Events</NavLink>
+      </li>
+      <li>
+        <NavLink to="/app/attendance" className={linkClass}>Attendance</NavLink>
+      </li>
+    </ul>
   );
 }
 
