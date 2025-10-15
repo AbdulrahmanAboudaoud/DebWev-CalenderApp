@@ -1,6 +1,15 @@
 import './Login.css';
+import React from 'react';
+import { useNavigate } from 'react-router-dom';
+
 
 function Login() {
+  const navigate = useNavigate();
+
+  const handleLogin = () => {
+    navigate('/app/home');
+  };
+
   return (
     <div className="Login">
       <h1>Hello.</h1>
@@ -10,7 +19,7 @@ function Login() {
         <input className="form-container-input-email" type="text" placeholder="Enter email" />
         <h2>Passwordddd</h2>
         <input className="form-container-input-password" type="password" placeholder="Enter password" />
-        <button>Login</button>
+        <button onClick={handleLogin}>Login</button>
       </div>
     </div>
   );
