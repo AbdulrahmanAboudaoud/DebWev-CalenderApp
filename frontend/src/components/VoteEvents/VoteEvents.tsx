@@ -1,0 +1,82 @@
+import "./VoteEvents.css";
+import React, { useState } from "react";
+import { Button, Card, Form, Badge } from "react-bootstrap";
+
+type EventOption = {
+  id: number;
+  title: string;
+  datetime: string;
+  votes: number;
+};
+// fake data to make it look as if it works
+const events: EventOption[] = [
+  {
+    id: 1,
+    title: "Go Carting",
+    datetime: "Oct 26, 2024, 10:00 AM - 11:30 AM",
+    votes: 12,
+  },
+  {
+    id: 2,
+    title: "Group Yoga",
+    datetime: "Oct 27, 2024, 2:00 PM - 3:00 PM",
+    votes: 8,
+  },
+  {
+    id: 3,
+    title: "Management Boxing Match",
+    datetime: "Nov 01, 2024, 9:00 AM - 12:00 PM",
+    votes: 15,
+  },
+  {
+    id: 4,
+    title: "Biergarten",
+    datetime: "Nov 05, 2024, 1:00 PM - 5:00 PM",
+    votes: 10,
+  },
+];
+
+const VoteEvents: React.FC = () => {
+    const [selectedEventId, setSelectedEventId] = useState<number | null>(null);
+
+    const handleSelect = (id: number) => {
+        setSelectedEventId(id);
+    };
+
+    const handleVote = () => {
+        if (selectedEventId !== null) {
+        alert(`You voted for event ID: ${selectedEventId}`);
+        // Here you could call an API to submit the vote
+        }
+    };
+
+    return (
+        <div className="vote-events">
+        <h2>Vote for Next Event</h2>
+        <div className="event-list">
+            {events.map((event) => (
+            <Card key={event.id} className="event-card">
+                <Card.Body className="event-card-body">
+                <Form.Check
+                    type="radio"
+                    name="event"
+                    id={`event-${event.id}`}
+                    label={event.title}
+                    onChange={() => handleSelect(event.id)}
+                    checked={selectedEventId === event.id}
+                    className="event-radio"
+                />
+                <Card.Text className="event-datetime">{event.datetime}</Card.Text>
+                <Badge className="event-votes">{event.votes} votes</Badge>
+                </Card.Body>
+            </Card>
+            ))}
+        </div>
+        <Button variant="primary" onClick={handleVote} className="vote-button">
+            Cast Vote
+        </Button>
+        </div>
+    );
+};
+
+export default VoteEvents;
