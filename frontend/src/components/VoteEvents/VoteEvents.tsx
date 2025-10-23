@@ -1,6 +1,6 @@
-import "./VoteEvents.css";
 import React, { useState } from "react";
-import { Button, Card, Form, Badge } from "react-bootstrap";
+import { Card, Form, Badge, Button } from "react-bootstrap";
+import "./VoteEvents.css";
 
 type EventOption = {
   id: number;
@@ -34,49 +34,57 @@ const events: EventOption[] = [
     datetime: "Nov 05, 2024, 1:00 PM - 5:00 PM",
     votes: 10,
   },
+  {
+    id: 5,
+    title: "Higher Salary Protest (After Biergarten)",
+    datetime: "Nov 05, 2024, 5:00 PM - 12:00 AM",
+    votes: 883,
+  }
 ];
 
 const VoteEvents: React.FC = () => {
-    const [selectedEventId, setSelectedEventId] = useState<number | null>(null);
+  const [selectedEventId, setSelectedEventId] = useState<number | null>(null);
 
-    const handleSelect = (id: number) => {
-        setSelectedEventId(id);
-    };
+  const handleSelect = (id: number) => setSelectedEventId(id);
+  const handleVote = () => {
+    if (selectedEventId !== null) alert(`You voted for event ID: ${selectedEventId}`);
+  };
 
-    const handleVote = () => {
-        if (selectedEventId !== null) {
-        alert(`You voted for event ID: ${selectedEventId}`);
-        // Here you could call an API to submit the vote
-        }
-    };
-
-    return (
-        <div className="vote-events">
-        <h2>Vote for Next Event</h2>
-        <div className="event-list">
-            {events.map((event) => (
-            <Card key={event.id} className="event-card">
-                <Card.Body className="event-card-body">
+  return (
+    <div className="vote-events">
+      <h2>Vote for Next Event</h2>
+      <div className="event-list">
+        {events.map((event) => (
+          <Card
+            key={event.id}
+            className={`event-card ${selectedEventId === event.id ? "selected" : ""}`}
+            onClick={() => handleSelect(event.id)}
+          >
+            <Card.Body className="event-card-body">
+              <div className="event-left">
                 <Form.Check
-                    type="radio"
-                    name="event"
-                    id={`event-${event.id}`}
-                    label={event.title}
-                    onChange={() => handleSelect(event.id)}
-                    checked={selectedEventId === event.id}
-                    className="event-radio"
+                  type="radio"
+                  name="event"
+                  id={`event-${event.id}`}
+                  label={event.title}
+                  onChange={() => handleSelect(event.id)}
+                  checked={selectedEventId === event.id}
+                  className="event-radio"
                 />
-                <Card.Text className="event-datetime">{event.datetime}</Card.Text>
-                <Badge className="event-votes">{event.votes} votes</Badge>
-                </Card.Body>
-            </Card>
-            ))}
-        </div>
-        <Button variant="primary" onClick={handleVote} className="vote-button">
-            Cast Vote
-        </Button>
-        </div>
-    );
+                <div className="event-datetime">{event.datetime}</div>
+              </div>
+
+              <Badge className="event-votes">{event.votes} votes</Badge>
+            </Card.Body>
+          </Card>
+        ))}
+      </div>
+
+      <Button variant="primary" onClick={handleVote} className="vote-button">
+        Cast Vote
+      </Button>
+    </div>
+  );
 };
 
 export default VoteEvents;
