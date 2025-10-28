@@ -4,6 +4,8 @@ import ReactDOM from "react-dom/client";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import "./index.css";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import "bootstrap-icons/font/bootstrap-icons.css";
+
 
 import AuthLayout from "./layouts/AuthLayout";
 import UserLayout from "./layouts/UserLayout";
