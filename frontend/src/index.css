@@ -19,3 +19,7 @@ code {
   padding-left: 12px;
   padding-right: 12px;
 }
+
+main {
+  padding: 60px 16px !important;
+}

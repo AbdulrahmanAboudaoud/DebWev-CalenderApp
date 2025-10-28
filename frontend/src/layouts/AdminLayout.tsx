@@ -6,7 +6,7 @@ export default function AdminLayout() {
     return (
         <div>
             <AdminNavBar />
-            <main style={{ padding: "16px" }}>
+            <main>
                 <Outlet />
             </main>
         </div>

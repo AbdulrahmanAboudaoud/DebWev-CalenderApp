@@ -6,7 +6,7 @@ export default function UserLayout() {
     return (
         <div>
             <UserNavBar />
-            <main style={{ padding: "16px" }}>
+            <main>
                 <Outlet />
             </main>
         </div>
