@@ -1,44 +1,65 @@
 import React, { useState } from "react";
 import { NavLink } from "react-router-dom";
 import "./BookRoom.css";
-import DatePicker from "react-datepicker";
 
 function BookRoom() {
+  const [selectedRoom, setSelectedRoom] = useState("");
+  const [bookingDate, setBookingDate] = useState("");
+  const [startTime, setStartTime] = useState("");
+  const [endTime, setEndTime] = useState("");
+
   return (
     <div className="book-room-container">
-      <h2>Book a Room</h2>
-      <p>Fill in the details to book your desired room.</p>
+      <div className="book-room-header">
+        <h2>Book a Room</h2>
+        <p>Fill in the details to book your desired room.</p>
+      </div>
 
-      <div className="form-section">
+      <div className="form-section-pickers">
         <h3 className="form-section-header">Room Name</h3>
-            <select className="room-select">
-              <option value="conferenceRoom">Conference Room</option>
-              <option value="meetingRoom">Meeting Room</option>
-              <option value="CudllePartyRoom">Cuddle Party Room</option>
-            </select>
+        <select 
+          className="room-select"
+          value={selectedRoom}
+          onChange={(e) => setSelectedRoom(e.target.value)}
+        >
+          <option value="">Select a room</option>
+          <option value="conferenceRoomA">Conference Room A</option>
+          <option value="meetingRoomB">Meeting Room B</option>
+          <option value="executiveLounge">Executive Lounge Gamma</option>
+        </select>
+        
+        <h3 className="form-section-header">Booking Date</h3>
+        <input 
+          aria-label="Date" 
+          type="date" 
+          value={bookingDate}
+          onChange={(e) => setBookingDate(e.target.value)}
+        />
       </div>
 
-      <div className="form-section">
-        <h3>Booking Date</h3>
-        <input aria-label="Date" type="date" />
-      </div>
+      <div className="form-section-time">
+        <div className="time-input-group">
+          <h3>Start Time</h3>
+          <input 
+            aria-label="Start Time" 
+            type="time" 
+            value={startTime}
+            onChange={(e) => setStartTime(e.target.value)}
+          />
+        </div>
 
-      <div>
-        <div>
-          <div>
-            <h3>Start Time</h3>
-            <input aria-label="Start Time" type="time" />
-          </div>
-          <div>
-            <h3>End Time</h3>
-            <input aria-label="Start Time" type="time" />
-          </div>
+        <div className="time-input-group">
+          <h3>End Time</h3>
+          <input 
+            aria-label="End Time" 
+            type="time" 
+            value={endTime}
+            onChange={(e) => setEndTime(e.target.value)}
+          />
         </div>
       </div>
 
-      <button className="book-button">
-        Book Room
-      </button>
+      <button className="book-button">Book Room</button>
     </div>
   );
 }
