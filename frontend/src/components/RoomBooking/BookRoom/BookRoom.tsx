@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { NavLink } from "react-router-dom";
 import "./BookRoom.css";
+import DatePicker from "react-datepicker";
 
 function BookRoom() {
   return (
@@ -10,27 +11,26 @@ function BookRoom() {
 
       <div className="form-section">
         <h3>Room Name</h3>
-        <div className="room-option">
-          Conference Room A
-        </div>
+            <select>
+              <option value="conferenceRoom">Conference Room</option>
+              <option value="meetingRoom">Meeting Room</option>
+            </select>
       </div>
 
       <div className="form-section">
         <h3>Booking Date</h3>
-        <div className="date-display">
-          September 23rd, 2025
-        </div>
+        <input aria-label="Date" type="date" />
       </div>
 
-      <div className="form-section">
-        <div className="time-row">
-          <div className="time-group">
+      <div>
+        <div>
+          <div>
             <h3>Start Time</h3>
-            <div className="time-display">09:00</div>
+            <input aria-label="Start Time" type="time" />
           </div>
-          <div className="time-group">
+          <div>
             <h3>End Time</h3>
-            <div className="time-display">10:00</div>
+            <input aria-label="Start Time" type="time" />
           </div>
         </div>
       </div>

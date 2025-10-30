@@ -2,6 +2,12 @@ import React, { useState } from "react";
 import { NavLink } from "react-router-dom";
 import "./MyBookings.css";
 
+const [bookings] = useState([
+    { id: 1, name: "Conference Room A", date: "Nov 15, 2023", startTime: "10:00", endTime: "11:00" },
+    { id: 2, name: "Meeting Room B", date: "Nov 16, 2023", startTime: "14:00", endTime: "15:30" },
+    { id: 3, name: "Cuddle Space C", date: "Nov 17, 2023", startTime: "09:30", endTime: "10:00"}
+]);
+
 function MyBookings() {
   return (
     <div className="my-booking-container">
@@ -9,18 +15,12 @@ function MyBookings() {
       <p>View and manage your current room bookings.</p>
 
       <ul className="booking-list">
-          <li>
-              <h3>Conference Room A</h3>
-              <p>Nov 15, 2023 • 10:00 - 11:00</p>
-          </li>
-          <li>
-              <h3>Meeting Room B</h3>
-              <p>Nov 16, 2023 • 14:00 - 15:30</p>
-          </li>
-          <li>
-              <h3>Huddle Space C</h3>
-              <p>Nov 17, 2023 • 09:30 - 10:00</p>
-          </li>
+      {bookings.map((booking) => (
+        <li key={booking.id}>
+          <h3>{booking.name}</h3>
+          <p>{booking.date} • {booking.startTime} Until {booking.endTime} </p>
+        </li>
+      ))}
       </ul>
     </div>
   );
