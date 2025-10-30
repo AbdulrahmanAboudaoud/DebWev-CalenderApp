@@ -1,11 +1,11 @@
 .upcoming-events {
-    text-align: center;
+    text-align: left;
     padding: 20px;
     margin-top: 30px;
     margin-bottom: 0px;
     background-color: var(--WHITE);
     border-radius: 10px;
-    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    box-shadow: 0px 4px 10px var(--SHADOW-COLOR);
     width: 100%;
 }
 
@@ -13,29 +13,69 @@
     font-size: 20px;
     font-weight: bold;
     margin-bottom: 20px;
+    text-align: center;
+}
+
+.upcoming-events-container {
+    display: flex;
+    flex-direction: column;
+    height: 450px;
+}
+
+.event-list {
+    flex: 1;
+    overflow-y: auto;
+    margin-bottom: 10px;
+    padding-right: 5px;
+}
+
+/* Scrollbar styling to match VoteEvents */
+.event-list::-webkit-scrollbar {
+    width: 6px;
+}
+
+.event-list::-webkit-scrollbar-track {
+    background: var(--GREEN); 
+    border-radius: 3px;
+}
+
+.event-list::-webkit-scrollbar-thumb {
+    background: var(--PINK);
+    border-radius: 3px;
+}
+
+.event-list::-webkit-scrollbar-thumb:hover {
+    background: var(--PINK-DARK);
+}
+
+/* Firefox scrollbar */
+.event-list {
+    scrollbar-width: thin;
+    scrollbar-color: var(--PINK) var(--GREEN);
 }
 
 .upcoming-events .card {
     text-align: left;
-    border:none ;
+    border: none;
     padding: 0px;
     margin-top: 0px;
     margin-bottom: 5px !important;
 }
 
 .upcoming-events .card-body {
-  border: none;
-  background-color: #fff;
-  margin-bottom: 0px;
-  padding: 10px 16px;
-  border-radius: 10px;
-  box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+    border: none;
+    background-color: var(--WHITE);
+    margin-bottom: 0px;
+    padding: 10px 16px;
+    border-radius: 10px;
+    box-shadow: 0px 2px 5px var(--SHADOW-COLOR);
 }
 
 .upcoming-events .card-title {
     font-size: 16px;
     font-weight: bold;
     margin-bottom: 5px;
+    color: var(--BLACK);
 }
 .upcoming-events .card-subtitle {
     font-size: 16px;
