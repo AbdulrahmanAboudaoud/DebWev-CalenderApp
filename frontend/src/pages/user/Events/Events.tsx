@@ -14,9 +14,10 @@ export type EventItem = {
     priceEUR?: number;
     type: string;
     imageUrl: string;
+    description: string;
 };
 
-const FAKE_EVENTS: EventItem[] = [
+export const FAKE_EVENTS: EventItem[] = [
     {
         id: "1",
         title: "Summer DJ Night at the Beach",
@@ -28,6 +29,8 @@ const FAKE_EVENTS: EventItem[] = [
         type: "Party",
         imageUrl:
             "https://images.unsplash.com/photo-1507874457470-272b3c8d8ee2?q=80&w=1600&auto=format&fit=crop",
+        description:
+            "Get ready for a night of dancing under the stars! The Summer DJ Night brings you top local DJs, tropical cocktails, and an incredible beach vibe. Expect vibrant lights, energetic beats, and a crowd that’s all about good times. Dress for the summer and dance until sunrise with your friends right by the waves.",
     },
     {
         id: "2",
@@ -40,6 +43,8 @@ const FAKE_EVENTS: EventItem[] = [
         type: "Entertainment",
         imageUrl:
             "https://images.unsplash.com/photo-1519671482749-fd09be7ccebf?q=80&w=1600&auto=format&fit=crop",
+        description:
+            "A cozy evening full of laughter, friends, and music! Step on stage and sing your heart out while enjoying delicious cocktails and snacks. Whether you’re a pro singer or just there for fun, our Karaoke & Drinks Night is the perfect way to unwind and share a good laugh with your crew.",
     },
     {
         id: "3",
@@ -52,8 +57,11 @@ const FAKE_EVENTS: EventItem[] = [
         type: "Festival",
         imageUrl:
             "https://images.unsplash.com/photo-1504754524776-8f4f37790ca0?q=80&w=1600&auto=format&fit=crop",
+        description:
+            "Discover a world of flavors at Utrecht’s annual Street Food Festival! Dozens of food trucks and local chefs gather for a day of global tastes, live music, and open-air fun. Bring your friends, try something new, and enjoy the festive atmosphere filled with the smell of fresh street food and live performances throughout the day.",
     },
 ];
+
 
 export function formatDateRange(startsAt: string, endsAt?: string) {
     const start = new Date(startsAt);
@@ -132,7 +140,12 @@ const EventsPage: React.FC = () => {
             <h2 className="fw-bold mb-3">Upcoming Events</h2>
 
             {/* Grid */}
-            <EventGrid events={filtered} />
+            <EventGrid
+                events={filtered}
+                linkPrefix="/app/events"
+                buttonLabel="View Details"
+            />
+
 
             {/* Form */}
             <section className="mt-5">

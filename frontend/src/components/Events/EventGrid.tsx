@@ -52,6 +52,7 @@ const EventGrid: React.FC<Props> = ({
                                 <Link
                                     to={`${linkPrefix}/${event.id}`}
                                     className="btn view-events-btn w-100"
+                                    state={{ event }}
                                 >
                                     {buttonLabel}
                                 </Link>
