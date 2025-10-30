@@ -1,0 +1,94 @@
+.booking-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: white;
+    margin: 2rem auto;
+    padding: 3rem 3vw;
+    max-width: 600px;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.booking-header {
+    text-align: center;
+    margin-bottom: 2rem;
+    width: 100%;
+}
+
+.booking-header h1 {
+    margin-bottom: 0.5rem;
+    color: #333;
+    font-weight: bold;
+    font-size: 24px;
+}
+
+.booking-header p {
+    color: #666;
+    margin: 0;
+    font-size: 14px;
+}
+
+.bookings-list {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.booking-item {
+    width: 100%;
+    padding: 1rem 0;
+}
+
+.booking-content {
+    width: 100%;
+}
+
+.booking-name {
+    font-weight: bold;
+    font-size: 16px;
+    margin: 0 0 0.5rem 0;
+    color: #333;
+}
+
+.booking-details {
+    color: #666;
+    margin: 0;
+    font-size: 14px;
+}
+
+.booking-divider {
+    border: none;
+    border-top: 1px solid #e0e0e0;
+    margin: 1rem 0 0 0;
+    width: 100%;
+}
+
+.booking-actions {
+    display: flex;
+    gap: 0.5rem;
+    margin-top: 0.5rem;
+}
+
+.edit-button, .delete-button {
+    padding: 0.25rem 0.75rem;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    background: white;
+    cursor: pointer;
+    font-size: 12px;
+}
+
+.edit-button:hover {
+    background: #f8f9fa;
+}
+
+.delete-button {
+    color: #dc3545;
+    border-color: #dc3545;
+}
+
+.delete-button:hover {
+    background: #dc3545;
+    color: white;
+}

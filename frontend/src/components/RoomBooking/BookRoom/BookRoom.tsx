@@ -25,7 +25,7 @@ function BookRoom() {
           <option value="">Select a room</option>
           <option value="conferenceRoomA">Conference Room A</option>
           <option value="meetingRoomB">Meeting Room B</option>
-          <option value="executiveLounge">Executive Lounge Gamma</option>
+          <option value="executiveLounge">Huddle Space C</option>
         </select>
         
         <h3 className="form-section-header">Booking Date</h3>
