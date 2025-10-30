@@ -1,8 +1,10 @@
+// frontend/src/pages/user/Events/EventsPage.tsx
 import React, { useMemo, useState } from "react";
 import "./Events.css";
-import { Link } from "react-router-dom";
+import EventGrid from "../../../components/Events/EventGrid";
+import EventIdeaForm from "../../../components/Events/EventIdeaForm";
 
-type EventItem = {
+export type EventItem = {
     id: string;
     title: string;
     startsAt: string;
@@ -53,7 +55,7 @@ const FAKE_EVENTS: EventItem[] = [
     },
 ];
 
-function formatDateRange(startsAt: string, endsAt?: string) {
+export function formatDateRange(startsAt: string, endsAt?: string) {
     const start = new Date(startsAt);
     const end = endsAt ? new Date(endsAt) : undefined;
 
@@ -75,7 +77,7 @@ function formatDateRange(startsAt: string, endsAt?: string) {
     return `${dateFmt} • ${timeFmt.format(start)}`;
 }
 
-function formatPriceEUR(priceEUR?: number) {
+export function formatPriceEUR(priceEUR?: number) {
     if (!priceEUR || priceEUR === 0) return "Gratis";
     return priceEUR.toString();
 }
@@ -101,6 +103,11 @@ const EventsPage: React.FC = () => {
         });
     }, [query]);
 
+    const handleIdeaSubmit = (formData: FormData) => {
+        console.log("Event idea submitted:", Object.fromEntries(formData.entries()));
+        alert("Thanks! Your event idea has been submitted 🎉");
+    };
+
     return (
         <div className="container py-4">
             {/* Search Bar */}
@@ -121,62 +128,16 @@ const EventsPage: React.FC = () => {
                 </div>
             </div>
 
-
             {/* Title */}
             <h2 className="fw-bold mb-3">Upcoming Events</h2>
 
-            {/* Events Grid */}
-            <div className="row g-4">
-                {filtered.map((event) => (
-                    <div key={event.id} className="col-12 col-md-6 col-lg-4">
-                        <div className="card h-100 shadow-sm">
-                            <img
-                                src={event.imageUrl}
-                                alt={event.title}
-                                className="card-img-top event-card-img"
-                            />
-                            <div className="card-body d-flex flex-column">
-                                <h5 className="card-title fw-bold">{event.title}</h5>
+            {/* Grid */}
+            <EventGrid events={filtered} />
 
-                                <div className="d-flex align-items-start gap-2 mb-1 text-body-secondary">
-                                    <i className="bi bi-calendar-event"></i>
-                                    <span>{formatDateRange(event.startsAt, event.endsAt)}</span>
-                                </div>
-
-                                <div className="d-flex align-items-start gap-2 mb-1 text-body-secondary">
-                                    <i className="bi bi-geo-alt"></i>
-                                    <span>
-                                        {event.location}, {event.city}
-                                    </span>
-                                </div>
-
-                                <div className="d-flex align-items-start gap-2 mb-3 text-body-secondary">
-                                    <i className="bi bi-currency-euro"></i>
-                                    <span>{formatPriceEUR(event.priceEUR)}</span>
-                                </div>
-
-                                <div className="mb-3">
-                                    <span className="badge event-type-badge">{event.type}</span>
-                                </div>
-
-                                <div className="mt-auto">
-                                    <Link to={`/events/${event.id}`} className="btn view-events-btn w-100 ">
-                                        View Details
-                                    </Link>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                ))}
-
-                {filtered.length === 0 && (
-                    <div className="col-12">
-                        <div className="alert alert-light border text-center">
-                            No fun events found 🎈
-                        </div>
-                    </div>
-                )}
-            </div>
+            {/* Form */}
+            <section className="mt-5">
+                <EventIdeaForm onSubmit={handleIdeaSubmit} />
+            </section>
         </div>
     );
 };

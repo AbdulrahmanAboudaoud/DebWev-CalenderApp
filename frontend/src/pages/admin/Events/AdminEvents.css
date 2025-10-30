@@ -1,7 +1,31 @@
-.list {
-    padding-left: 18px;
+/* === Admin Event Ideas Table === */
+.admin-event-ideas-table th,
+.admin-event-ideas-table td {
+    border-color: #dee2e6;
+    vertical-align: middle;
 }
 
-.list li {
-    margin: 6px 0;
+.admin-event-ideas-table .event-idea-row td {
+    padding-top: 1.25rem !important;
+    padding-bottom: 1.25rem !important;
+}
+
+.btn-accept {
+    background-color: var(--PINK);
+    color: #fff;
+    border: none;
+    transition: background-color 0.2s ease-in-out;
+}
+
+.btn-accept:hover {
+    background-color: var(--PINK-DARK);
+    color: #fff;
+}
+
+/* Description cell styling */
+.idea-disc {
+    max-width: 340px;
+    white-space: normal;
+    word-break: break-word;
+    line-height: 1.5;
 }
