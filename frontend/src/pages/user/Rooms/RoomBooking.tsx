@@ -1,14 +1,14 @@
 import React, { useState } from "react";
 import { NavLink } from "react-router-dom";
 import "./RoomBooking.css";
-import BookRoom from "frontend/src/components/RoomBooking/BookRoom/BookRoom.tsx";
+import BookRoom from "../../../components/RoomBooking/BookRoom/BookRoom";
 
-function BookARoom() {
+function RoomBooking() {
   return (
     <div>
-        <BookARoom/>
+        <BookRoom/>
     </div>
   );
 }
 
-export default BookARoom;
+export default RoomBooking;
