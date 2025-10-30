@@ -3,8 +3,7 @@
     padding: 20px;
     background-color: var(--WHITE);
     border-radius: 10px;
-    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
-    width: 100%;
+    box-shadow: 0px 4px 10px var(--SHADOW-COLOR);
 }
 
 .vote-events h2 {
@@ -13,8 +12,47 @@
     margin-bottom: 20px;
 }
 
-.vote-events .event-list {
-    margin-bottom: 20px;  
+.vote-events-container {
+    display: flex;
+    flex-direction: column;
+    height: 450px; 
+}
+
+.event-list {
+    flex: 1;
+    overflow-y: auto;
+    margin-bottom: 10px;
+    padding-right: 5px; 
+}
+
+/* Scrollbar styling */
+.event-list::-webkit-scrollbar {
+    width: 8px;
+}
+
+.event-list::-webkit-scrollbar-track {
+    background: var(--GREEN);
+}
+
+.event-list::-webkit-scrollbar-thumb {
+    background: var(--PINK);
+    border-radius: 4px;
+    border: 2px solid var(--WHITE);
+}
+
+.event-list::-webkit-scrollbar-thumb:hover {
+    background: var(--PINK-DARK);
+}
+
+.event-list {
+    scrollbar-width: thin;
+    scrollbar-color: var(--PINK) var(--WHITE);
+}
+
+.vote-button-container {
+    padding-top: 10px;
+    border-top: 1px solid rgba(0, 0, 0, 0.1);
+    background-color: var(--WHITE);
 }
   
 .vote-events .event-card {
@@ -23,10 +61,9 @@
     margin-bottom: 10px;
     padding: 10px, 16px;
     border-radius: 10px;
-    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+    box-shadow: 0px 2px 5px var(--SHADOW-COLOR);
 }
  
-     
 .vote-events .event-card-body {
     display: flex;
     align-items: center;
@@ -40,17 +77,16 @@
 
 .vote-events .event-votes {
     background-color: var(--PINK);
-    color: var(--PINK_DARK);
+    color: var(--WHITE);
 }
 
 .vote-events .vote-button {
-    background-color: var(--PINK);
-    color: var(--BLACK);
-    font-weight: bold;
-    border: none;
-    border-radius: 10px;
-    padding: 10px 20px;
     width: 100%;
+    background-color: var(--PINK);
+    color: var(--WHITE);
+    border: none;
+    padding: 10px;
+    font-weight: bold;
 }
 
 .vote-events .vote-button:hover {
@@ -82,4 +118,9 @@
     top: auto;
     margin: 0 12px 0 0;
     vertical-align: middle;
+}
+
+.event-card.selected {
+    background-color: var(--PINK);
+    border: 2px solid var(--PINK-DARK);
 }

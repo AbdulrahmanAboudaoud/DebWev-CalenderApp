@@ -36,9 +36,21 @@ const events: EventOption[] = [
   },
   {
     id: 5,
-    title: "Higher Salary Protest (After Biergarten)",
+    title: "Higher Salary Protest",
     datetime: "Nov 05, 2024, 5:00 PM - 12:00 AM",
     votes: 883,
+  },
+  {
+    id: 6,
+    title: "Company Picnic",
+    datetime: "Nov 12, 2024, 12:00 PM - 4:00 PM",
+    votes: 25,
+  },
+  {
+    id: 7,
+    title: "Tech Talk: Future of AI",
+    datetime: "Nov 15, 2024, 3:00 PM - 4:30 PM",
+    votes: 30,
   }
 ];
 
@@ -53,36 +65,38 @@ const VoteEvents: React.FC = () => {
   return (
     <div className="vote-events">
       <h2>Vote for Next Event</h2>
-      <div className="event-list">
-        {events.map((event) => (
-          <Card
-            key={event.id}
-            className={`event-card ${selectedEventId === event.id ? "selected" : ""}`}
-            onClick={() => handleSelect(event.id)}
-          >
-            <Card.Body className="event-card-body">
-              <div className="event-left">
-                <Form.Check
-                  type="radio"
-                  name="event"
-                  id={`event-${event.id}`}
-                  label={event.title}
-                  onChange={() => handleSelect(event.id)}
-                  checked={selectedEventId === event.id}
-                  className="event-radio"
-                />
-                <div className="event-datetime">{event.datetime}</div>
-              </div>
-
-              <Badge className="event-votes">{event.votes} votes</Badge>
-            </Card.Body>
-          </Card>
-        ))}
+      <div className="vote-events-container">
+        <div className="event-list">
+          {events.map((event) => (
+            <Card
+              key={event.id}
+              className={`event-card ${selectedEventId === event.id ? "selected" : ""}`}
+              onClick={() => handleSelect(event.id)}
+            >
+              <Card.Body className="event-card-body">
+                <div className="event-left">
+                  <Form.Check
+                    type="radio"
+                    name="event"
+                    id={`event-${event.id}`}
+                    label={event.title}
+                    onChange={() => handleSelect(event.id)}
+                    checked={selectedEventId === event.id}
+                    className="event-radio"
+                  />
+                  <div className="event-datetime">{event.datetime}</div>
+                </div>
+                <Badge className="event-votes">{event.votes} votes</Badge>
+              </Card.Body>
+            </Card>
+          ))}
+        </div>
+        <div className="vote-button-container">
+          <Button variant="primary" onClick={handleVote} className="vote-button">
+            Cast Vote
+          </Button>
+        </div>
       </div>
-
-      <Button variant="primary" onClick={handleVote} className="vote-button">
-        Cast Vote
-      </Button>
     </div>
   );
 };

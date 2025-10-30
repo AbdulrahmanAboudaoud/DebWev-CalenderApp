@@ -8,9 +8,9 @@
 }
 
 .event-type-badge {
-    background: #f8f9fa;
-    border: 1px solid #dee2e6;
-    color: #212529;
+    background: var(--GREEN);
+    border: 1px solid var(--fc-border-color);
+    color: var(--BLACK);
     padding: 0.4rem 0.6rem;
     border-radius: 999px;
     font-weight: 700;
@@ -23,4 +23,22 @@
 
 .view-events-btn:hover {
     background-color: var(--PINK-DARK);
+}
+
+.events-container {
+    background-color: var(--WHITE);
+    border-radius: 10px;
+    box-shadow: 0px 4px 10px var(--SHADOW-COLOR);
+}
+
+.event-card {
+    border: 1px solid var(--GREEN);
+}
+
+.event-title {
+    color: var(--BLACK);
+}
+
+.event-description {
+    color: var(--GRAY);
 }

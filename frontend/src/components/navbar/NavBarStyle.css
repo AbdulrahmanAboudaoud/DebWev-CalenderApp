@@ -115,7 +115,6 @@ ul li a:hover {
     opacity: 0.4;
 }
 
-/* Responsive: on narrow screens stack center links and keep logo+title visible */
 @media (max-width: 720px) {
     .NavBar {
         flex-wrap: wrap;
@@ -146,4 +145,17 @@ ul li a:hover {
         flex-wrap: wrap;
         gap: 0.5rem;
     }
+}
+
+.navbar {
+    background-color: var(--WHITE);
+    box-shadow: 0 2px 4px var(--SHADOW-COLOR);
+}
+
+.nav-link {
+    color: var(--BLACK) !important;
+}
+
+.nav-link:hover {
+    color: var(--PINK) !important;
 }

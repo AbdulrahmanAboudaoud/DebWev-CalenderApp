@@ -1,10 +1,120 @@
-
 .calendar-container {
-  margin: 0;
-  max-width: 100%;
+  background-color: var(--WHITE);
   border-radius: 10px;
-  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
-  background-color: var(--fc-page-bg-color, #ffffff) !important;
+  box-shadow: 0px 4px 10px var(--SHADOW-COLOR);
   padding: 20px;
 }
 
+/* Styling the FullCalendar component was not done by hand. I gave up after a while*/
+
+/* Calendar header and navigation */
+.fc .fc-toolbar-title {
+  color: var(--BLACK);
+}
+
+.fc .fc-button-primary {
+  background-color: var(--PINK) !important;
+  border-color: var(--PINK) !important;
+  color: var(--WHITE) !important;
+}
+
+.fc .fc-button-primary:hover {
+  background-color: var(--PINK-DARK) !important;
+  border-color: var(--PINK-DARK) !important;
+}
+
+.fc .fc-button-primary:disabled {
+  background-color: var(--GRAY) !important;
+  border-color: var(--GRAY) !important;
+}
+
+/* Calendar grid */
+.fc .fc-daygrid-day-number {
+  color: var(--BLACK);
+}
+
+.fc .fc-col-header-cell-cushion {
+  color: var(--PINK-DARK) !important;
+  text-decoration: none !important;
+}
+
+.fc .fc-day-today {
+  background-color: var(--GREEN) !important;
+}
+
+/* Events */
+.fc .fc-event {
+  background-color: var(--PINK) !important;
+  border-color: var(--PINK) !important;
+  color: var(--WHITE) !important;
+}
+
+.fc .fc-event:hover {
+  background-color: var(--PINK-DARK) !important;
+  border-color: var(--PINK-DARK) !important;
+}
+
+/* Remove default link styling */
+.fc a {
+  color: inherit;
+  text-decoration: none;
+}
+
+/* Time-specific events styling */
+.fc-timegrid-event {
+    background-color: var(--PINK) !important;
+    border-color: var(--PINK) !important;
+}
+
+.fc-timegrid-event:hover {
+    background-color: var(--PINK-DARK) !important;
+    border-color: var(--PINK-DARK) !important;
+}
+
+/* Time slots styling */
+.fc-timegrid-slot {
+    height: 40px !important;
+}
+
+.fc-timegrid-slot-label {
+    color: var(--BLACK);
+}
+
+/* Adjust time column width */
+.fc .fc-timegrid-axis-cushion {
+    color: var(--BLACK);
+    font-size: 0.9em;
+}
+
+@media screen and (max-width: 768px) {
+    .calendar-container {
+        padding: 10px;
+    }
+
+    .fc .fc-toolbar {
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    .fc .fc-toolbar-title {
+        font-size: 1.2em !important;
+    }
+
+    .fc .fc-button {
+        padding: 6px 12px;
+        font-size: 0.9em;
+    }
+
+    .fc .fc-view-harness {
+        min-height: 400px;
+    }
+
+    .fc .fc-timegrid-axis-cushion,
+    .fc .fc-timegrid-slot-label {
+        font-size: 0.8em;
+    }
+
+    .fc-event-title {
+        font-size: 0.9em;
+    }
+}
