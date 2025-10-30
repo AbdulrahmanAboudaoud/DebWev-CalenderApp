@@ -10,10 +10,11 @@ function BookRoom() {
       <p>Fill in the details to book your desired room.</p>
 
       <div className="form-section">
-        <h3>Room Name</h3>
-            <select>
+        <h3 className="form-section-header">Room Name</h3>
+            <select className="room-select">
               <option value="conferenceRoom">Conference Room</option>
               <option value="meetingRoom">Meeting Room</option>
+              <option value="CudllePartyRoom">Cuddle Party Room</option>
             </select>
       </div>
 

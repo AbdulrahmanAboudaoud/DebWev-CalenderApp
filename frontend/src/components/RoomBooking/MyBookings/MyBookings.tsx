@@ -2,11 +2,11 @@ import React, { useState } from "react";
 import { NavLink } from "react-router-dom";
 import "./MyBookings.css";
 
-const [bookings] = useState([
+const bookings = [
     { id: 1, name: "Conference Room A", date: "Nov 15, 2023", startTime: "10:00", endTime: "11:00" },
     { id: 2, name: "Meeting Room B", date: "Nov 16, 2023", startTime: "14:00", endTime: "15:30" },
     { id: 3, name: "Cuddle Space C", date: "Nov 17, 2023", startTime: "09:30", endTime: "10:00"}
-]);
+];
 
 function MyBookings() {
   return (
