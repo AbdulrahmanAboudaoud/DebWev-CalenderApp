@@ -1,10 +1,19 @@
-import React from "react";
+import React, { useState } from "react";
 import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import timeGridPlugin from "@fullcalendar/timegrid";
+import EventModal from "../EventModal/EventModal";
 import "./Calendar.css";
 
 const Calendar: React.FC = () => {
+    const [selectedEvent, setSelectedEvent] = useState(null);
+    const [showModal, setShowModal] = useState(false);
+
+    const handleEventClick = (clickInfo: any) => {
+        setSelectedEvent(clickInfo.event);
+        setShowModal(true);
+    };
+
     const events = [
         {
             title: "Go Carting",
@@ -58,7 +67,13 @@ const Calendar: React.FC = () => {
                     month: 'Month',
                     week: 'Week'
                 }}
+                eventClick={handleEventClick}
             />    
+            <EventModal
+                show={showModal}
+                onHide={() => setShowModal(false)}
+                event={selectedEvent}
+            />
         </div>
     );
 };

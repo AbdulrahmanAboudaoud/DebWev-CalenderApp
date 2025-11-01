@@ -121,6 +121,6 @@
 }
 
 .event-card.selected {
-    background-color: var(--PINK);
+    background-color: var(--WHITE);
     border: 2px solid var(--PINK-DARK);
 }
