@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Card, Form, Badge, Button } from "react-bootstrap";
 import "./VoteEvents.css";
+import VoteModal from "../VoteModal/VoteModal";
 
 type EventOption = {
   id: number;
@@ -55,11 +56,12 @@ const events: EventOption[] = [
 ];
 
 const VoteEvents: React.FC = () => {
-  const [selectedEventId, setSelectedEventId] = useState<number | null>(null);
+  const [selectedEvent, setSelectedEvent] = useState<EventOption>(events[0]);
+  const [showModal, setShowModal] = useState(false);
 
-  const handleSelect = (id: number) => setSelectedEventId(id);
+  const handleSelect = (event: EventOption) => setSelectedEvent(event);
   const handleVote = () => {
-    if (selectedEventId !== null) alert(`You voted for event ID: ${selectedEventId}`);
+    setShowModal(true);
   };
 
   return (
@@ -70,8 +72,8 @@ const VoteEvents: React.FC = () => {
           {events.map((event) => (
             <Card
               key={event.id}
-              className={`event-card ${selectedEventId === event.id ? "selected" : ""}`}
-              onClick={() => handleSelect(event.id)}
+              className={`event-card ${selectedEvent.id === event.id ? "selected" : ""}`}
+              onClick={() => handleSelect(event)}
             >
               <Card.Body className="event-card-body">
                 <div className="event-left">
@@ -80,8 +82,8 @@ const VoteEvents: React.FC = () => {
                     name="event"
                     id={`event-${event.id}`}
                     label={event.title}
-                    onChange={() => handleSelect(event.id)}
-                    checked={selectedEventId === event.id}
+                    onChange={() => handleSelect(event)}
+                    checked={selectedEvent.id === event.id}
                     className="event-radio"
                   />
                   <div className="event-datetime">{event.datetime}</div>
@@ -89,8 +91,14 @@ const VoteEvents: React.FC = () => {
                 <Badge className="event-votes">{event.votes} votes</Badge>
               </Card.Body>
             </Card>
+            
           ))}
         </div>
+        <VoteModal
+                show={showModal}
+                onHide={() => setShowModal(false)}
+                event={selectedEvent}
+              />
         <div className="vote-button-container">
           <Button variant="primary" onClick={handleVote} className="vote-button">
             Cast Vote
