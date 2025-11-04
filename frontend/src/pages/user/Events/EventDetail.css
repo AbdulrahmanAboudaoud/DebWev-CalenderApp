@@ -1,0 +1,26 @@
+.event-detail .table th {
+    white-space: nowrap;
+    color: #374151;
+    font-weight: 600;
+    border-bottom: 1px solid #f1f5f9;
+}
+
+.event-detail .table td {
+    border-bottom: 1px solid #f1f5f9;
+    word-break: break-word;
+}
+
+.event-longtext {
+    white-space: normal;
+    word-break: break-word;
+    overflow-wrap: anywhere;
+}
+
+.view-events-btn {
+    background-color: var(--PINK);
+    border: none;
+}
+
+.view-events-btn:hover {
+    background-color: var(--PINK-DARK);
+}

@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { Card, Form, Badge, Button } from "react-bootstrap";
+import React from "react";
+import { Card } from "react-bootstrap";
 import "./UpcomingEvents.css";
 
 type UpcomingEvent = {
@@ -36,9 +36,21 @@ const events: UpcomingEvent[] = [
   },
   {
     id: 5,
-    title: "Higher Salary Protest (After Biergarten)",
+    title: "Higher Salary Protest",
     datetime: "Nov 05, 2024, 5:00 PM - 12:00 AM",
     location: "In front of the company building",
+  },
+  {
+    id: 6,
+    title: "Company Picnic",
+    datetime: "Nov 12, 2024, 12:00 PM - 4:00 PM",
+    location: "Central Park",
+  },
+  {
+    id: 7,
+    title: "Tech Talk: Future of AI",
+    datetime: "Nov 15, 2024, 3:00 PM - 4:30 PM",
+    location: "Auditorium",
   }
 ];
 
@@ -46,15 +58,19 @@ const UpcomingEvents: React.FC = () => {
     return (
         <div className="upcoming-events">
             <h2>Upcoming Events</h2>
-            {events.map((event) => (
-                <Card key={event.id} className="mb-3">
-                    <Card.Body>
-                        <Card.Title>{event.title}</Card.Title>
-                        <Card.Subtitle className="mb-2">{event.datetime}</Card.Subtitle>
-                        <Card.Text>{event.location}</Card.Text>
-                    </Card.Body>
-                </Card>
-            ))}
+            <div className="upcoming-events-container">
+                <div className="event-list">
+                    {events.map((event) => (
+                        <Card key={event.id} className="event-card">
+                            <Card.Body>
+                                <Card.Title>{event.title}</Card.Title>
+                                <Card.Subtitle className="mb-2">{event.datetime}</Card.Subtitle>
+                                <Card.Text>{event.location}</Card.Text>
+                            </Card.Body>
+                        </Card>
+                    ))}
+                </div>
+            </div>
         </div>
     );
 };

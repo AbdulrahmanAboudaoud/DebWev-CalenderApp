@@ -5,13 +5,16 @@
     --WHITE: #ffffff;
     --GRAY: #838383;
     --GREEN: #F2F5EAFF;
+
+    --SHADOW-COLOR: rgba(0, 0, 0, 0.1);
+    --SHADOW-COLOR-DARK: rgba(0, 0, 0, 0.2);
+    --PINK-TRANSPARENT: rgba(231, 106, 124, 0.1);
     /* Calendar css */
     --fc-small-font-size: .85em;
     --fc-page-bg-color: #ffffff;
     --fc-neutral-bg-color: rgba(208, 208, 208, 0.418);
     --fc-neutral-text-color: #808080;
     --fc-border-color: #ddd;
-
     --fc-button-text-color: #fff;
     --fc-button-bg-color: #2C3E50;
     --fc-button-border-color: #2C3E50;
@@ -38,5 +41,5 @@
     --fc-highlight-color: rgba(188, 232, 241, 0.3);
     --fc-today-bg-color: rgba(255, 220, 40, 0.15);
     --fc-now-indicator-color: red;
+    --event-form: #FDF2F4FF;
 }
-

@@ -24,3 +24,8 @@
 .view-events-btn:hover {
     background-color: var(--PINK-DARK);
 }
+
+.event-form {
+    background-color: var(--event-form);
+    padding: 25px;
+}
