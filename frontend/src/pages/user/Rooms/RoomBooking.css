@@ -1,0 +1,30 @@
+.room-booking-container {
+  display: flex;
+  justify-content: center;
+  padding: 2rem;
+}
+
+.room-booking-content {
+  display: flex;
+  gap: 2rem;
+  max-width: 1200px;
+  width: 100%;
+}
+
+.left-side {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  flex: 1;
+}
+
+.right-side {
+  flex: 1;
+  display: flex;
+}
+
+/* Make sure the Rooms component stretches to full height */
+.right-side > * {
+  width: 100%;
+  height: 100%;
+}

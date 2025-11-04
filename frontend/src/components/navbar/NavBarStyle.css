@@ -13,7 +13,7 @@
     z-index: 100;
 }
 
-/* three areas: left (controls), center (links), right (logo + title) */
+/* three areas: right (controls), center (links), left (logo + title) */
 .nav-left,
 .nav-center,
 .nav-right {
