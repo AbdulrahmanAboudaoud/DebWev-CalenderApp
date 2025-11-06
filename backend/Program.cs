@@ -3,7 +3,9 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Npgsql;  // For raw DB connection
+using Npgsql;
+using Microsoft.Extensions.Configuration;
+using Microsoft.AspNetCore.Http;  // For raw DB connection
 
 var builder = WebApplication.CreateBuilder(args);
 

@@ -56,3 +56,4 @@ publish/
 artifacts/
 *.db
 backend/appsettings.json
+.sln

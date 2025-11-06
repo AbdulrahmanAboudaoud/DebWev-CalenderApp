@@ -2,6 +2,11 @@ Commands in `/Backend` terminal:
 
 # How to run the backend
 
+in program.cs 
+
+using Microsoft.Extensions.Configuration;
+using Microsoft.AspNetCore.Http;
+
 ```
 cd backend
 dotnet restore
