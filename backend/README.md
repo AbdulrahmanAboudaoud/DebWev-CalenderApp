@@ -19,7 +19,7 @@ In case of build errors:
 
 ```
 dotnet clean 
-dotnet buikd
+dotnet build
 ```
 
 http://localhost:5098/db-ping → should show { "connected": true }
