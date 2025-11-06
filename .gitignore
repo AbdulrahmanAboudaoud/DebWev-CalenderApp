@@ -55,6 +55,4 @@ local.settings.json
 publish/
 artifacts/
 *.db
-DebWev-CalenderApp.sln
-*.csproj
 backend/appsettings.json

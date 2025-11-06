@@ -1,4 +1,4 @@
-// Required namespaces
+﻿// Required namespaces
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
