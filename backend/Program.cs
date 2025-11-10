@@ -79,59 +79,9 @@ public class AppDbContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        // Primary keys
-        modelBuilder.Entity<Employee>().HasKey(e => e.UserId);
-        modelBuilder.Entity<Event>().HasKey(e => e.EventId);
-        modelBuilder.Entity<OfficeAttendance>().HasKey(a => a.AttendanceId);
-        modelBuilder.Entity<Room>().HasKey(r => r.RoomId);
-        modelBuilder.Entity<Group>().HasKey(g => g.GroupId);
-
-        // Composite keys
         modelBuilder.Entity<EventParticipation>().HasKey(e => new { e.EventId, e.UserId });
         modelBuilder.Entity<GroupMembership>().HasKey(g => new { g.UserId, g.GroupId });
         modelBuilder.Entity<RoomBooking>().HasKey(r => new { r.RoomId, r.UserId, r.BookingDate });
-
-        // Relationships
-        modelBuilder.Entity<Event>()
-            .HasOne(e => e.Creator)
-            .WithMany(emp => emp.EventsCreated)
-            .HasForeignKey(e => e.CreatedBy)
-            .OnDelete(DeleteBehavior.Restrict);
-
-        modelBuilder.Entity<EventParticipation>()
-            .HasOne(ep => ep.Employee)
-            .WithMany(e => e.EventParticipations)
-            .HasForeignKey(ep => ep.UserId);
-
-        modelBuilder.Entity<EventParticipation>()
-            .HasOne(ep => ep.Event)
-            .WithMany(e => e.Participants)
-            .HasForeignKey(ep => ep.EventId);
-
-        modelBuilder.Entity<OfficeAttendance>()
-            .HasOne(o => o.Employee)
-            .WithMany(e => e.OfficeAttendances)
-            .HasForeignKey(o => o.UserId);
-
-        modelBuilder.Entity<RoomBooking>()
-            .HasOne(rb => rb.Employee)
-            .WithMany(e => e.RoomBookings)
-            .HasForeignKey(rb => rb.UserId);
-
-        modelBuilder.Entity<RoomBooking>()
-            .HasOne(rb => rb.Room)
-            .WithMany(r => r.RoomBookings)
-            .HasForeignKey(rb => rb.RoomId);
-
-        modelBuilder.Entity<GroupMembership>()
-            .HasOne(gm => gm.Employee)
-            .WithMany(e => e.GroupMemberships)
-            .HasForeignKey(gm => gm.UserId);
-
-        modelBuilder.Entity<GroupMembership>()
-            .HasOne(gm => gm.Group)
-            .WithMany(g => g.GroupMemberships)
-            .HasForeignKey(gm => gm.GroupId);
     }
 }
 
@@ -141,9 +91,7 @@ public class AppDbContext : DbContext
 
 public class Employee
 {
-    [Key] // <--- EF primary key
     public int UserId { get; set; }
-
     public string Name { get; set; } = default!;
     public string Email { get; set; } = default!;
     public string Role { get; set; } = default!;
@@ -159,7 +107,6 @@ public class Employee
 
 public class Event
 {
-    [Key]
     public int EventId { get; set; }
     public string Title { get; set; } = default!;
     public string Description { get; set; } = default!;
@@ -182,7 +129,6 @@ public class EventParticipation
 
 public class OfficeAttendance
 {
-    [Key]
     public int AttendanceId { get; set; }
     public int UserId { get; set; }
     public DateTime Date { get; set; }
@@ -193,7 +139,6 @@ public class OfficeAttendance
 
 public class Room
 {
-    [Key]
     public int RoomId { get; set; }
     public string RoomName { get; set; } = default!;
     public int Capacity { get; set; }
@@ -217,7 +162,6 @@ public class RoomBooking
 
 public class Group
 {
-    [Key]
     public int GroupId { get; set; }
     public string GroupName { get; set; } = default!;
     public string Description { get; set; } = default!;
