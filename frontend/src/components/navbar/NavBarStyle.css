@@ -1,5 +1,5 @@
 .NavBar {
-    position: fixed;
+    position: absolute;
     top: 0;
     left: 0;
     right: 0;
@@ -24,7 +24,7 @@
 .nav-left {
     flex: 0 0 auto;
     justify-content: flex-start;
-    gap: 0.75rem;
+    gap: 1rem;
 }
 
 .nav-center {
@@ -33,9 +33,8 @@
 }
 
 .nav-right {
-    flex: 0 0 auto;
     justify-content: flex-end;
-    gap: 0.5rem;
+    gap: 1rem;
 }
 
 .NavBar a {
@@ -43,7 +42,7 @@
     text-decoration: none;
     display: inline-flex;
     align-items: center;
-    gap: 0.5rem;
+    gap: 1rem;
 }
 
 .NavBar ul {
@@ -56,7 +55,7 @@
 }
 
 .logo {
-    width: 48px;
+    width: 3rem;
     height: auto;
 }
 
@@ -79,7 +78,12 @@ ul li a:active {
 
 ul li a:hover {
     background-color: #E75A7C;
-    color: #fff;
+    padding: 1vh;
+    color: white !important;
+}
+
+.UsersName{
+    margin: 0px;
 }
 
 .bell {
@@ -150,12 +154,4 @@ ul li a:hover {
 .navbar {
     background-color: var(--WHITE);
     box-shadow: 0 2px 4px var(--SHADOW-COLOR);
-}
-
-.nav-link {
-    color: var(--BLACK) !important;
-}
-
-.nav-link:hover {
-    color: var(--PINK) !important;
 }

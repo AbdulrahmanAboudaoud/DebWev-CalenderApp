@@ -6,9 +6,9 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
 using Microsoft.Data.Sqlite;
 using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Hosting;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -91,6 +91,7 @@ public class AppDbContext : DbContext
 
 public class Employee
 {
+    [Key]
     public int UserId { get; set; }
     public string Name { get; set; } = default!;
     public string Email { get; set; } = default!;
@@ -107,6 +108,7 @@ public class Employee
 
 public class Event
 {
+    [Key]
     public int EventId { get; set; }
     public string Title { get; set; } = default!;
     public string Description { get; set; } = default!;
@@ -129,6 +131,7 @@ public class EventParticipation
 
 public class OfficeAttendance
 {
+    [Key]
     public int AttendanceId { get; set; }
     public int UserId { get; set; }
     public DateTime Date { get; set; }
@@ -139,6 +142,7 @@ public class OfficeAttendance
 
 public class Room
 {
+    [Key]
     public int RoomId { get; set; }
     public string RoomName { get; set; } = default!;
     public int Capacity { get; set; }
@@ -162,6 +166,7 @@ public class RoomBooking
 
 public class Group
 {
+    [Key]
     public int GroupId { get; set; }
     public string GroupName { get; set; } = default!;
     public string Description { get; set; } = default!;
