@@ -8,6 +8,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Data.Sqlite;
 using System.ComponentModel.DataAnnotations;
+using backend.Models;
 using Microsoft.AspNetCore.Hosting;
 
 
@@ -83,102 +84,4 @@ public class AppDbContext : DbContext
         modelBuilder.Entity<GroupMembership>().HasKey(g => new { g.UserId, g.GroupId });
         modelBuilder.Entity<RoomBooking>().HasKey(r => new { r.RoomId, r.UserId, r.BookingDate });
     }
-}
-
-// ------------------------------
-// Entities
-// ------------------------------
-
-public class Employee
-{
-    [Key]
-    public int UserId { get; set; }
-    public string Name { get; set; } = default!;
-    public string Email { get; set; } = default!;
-    public string Role { get; set; } = default!;
-    public string Department { get; set; } = default!;
-    public string Password { get; set; } = default!;
-
-    public ICollection<Event> EventsCreated { get; set; } = new List<Event>();
-    public ICollection<EventParticipation> EventParticipations { get; set; } = new List<EventParticipation>();
-    public ICollection<OfficeAttendance> OfficeAttendances { get; set; } = new List<OfficeAttendance>();
-    public ICollection<RoomBooking> RoomBookings { get; set; } = new List<RoomBooking>();
-    public ICollection<GroupMembership> GroupMemberships { get; set; } = new List<GroupMembership>();
-}
-
-public class Event
-{
-    [Key]
-    public int EventId { get; set; }
-    public string Title { get; set; } = default!;
-    public string Description { get; set; } = default!;
-    public DateTime EventDate { get; set; }
-    public int CreatedBy { get; set; }
-
-    public Employee Creator { get; set; } = default!;
-    public ICollection<EventParticipation> Participants { get; set; } = new List<EventParticipation>();
-}
-
-public class EventParticipation
-{
-    public int EventId { get; set; }
-    public int UserId { get; set; }
-    public string Status { get; set; } = default!;
-
-    public Event Event { get; set; } = default!;
-    public Employee Employee { get; set; } = default!;
-}
-
-public class OfficeAttendance
-{
-    [Key]
-    public int AttendanceId { get; set; }
-    public int UserId { get; set; }
-    public DateTime Date { get; set; }
-    public string Status { get; set; } = default!;
-
-    public Employee Employee { get; set; } = default!;
-}
-
-public class Room
-{
-    [Key]
-    public int RoomId { get; set; }
-    public string RoomName { get; set; } = default!;
-    public int Capacity { get; set; }
-    public string Location { get; set; } = default!;
-
-    public ICollection<RoomBooking> RoomBookings { get; set; } = new List<RoomBooking>();
-}
-
-public class RoomBooking
-{
-    public int RoomId { get; set; }
-    public int UserId { get; set; }
-    public DateTime BookingDate { get; set; }
-    public TimeOnly StartTime { get; set; }
-    public TimeOnly EndTime { get; set; }
-    public string Purpose { get; set; } = default!;
-
-    public Employee Employee { get; set; } = default!;
-    public Room Room { get; set; } = default!;
-}
-
-public class Group
-{
-    [Key]
-    public int GroupId { get; set; }
-    public string GroupName { get; set; } = default!;
-    public string Description { get; set; } = default!;
-
-    public ICollection<GroupMembership> GroupMemberships { get; set; } = new List<GroupMembership>();
-}
-
-public class GroupMembership
-{
-    public int UserId { get; set; }
-    public int GroupId { get; set; }
-
-    public Employee Employee { get; set; } = default!;
-    public Group Group { get; set; } = default!;
 }
