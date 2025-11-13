@@ -18,6 +18,9 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));
 
+// --- Add Controllers ---
+builder.Services.AddControllers();
+
 // --- OpenAPI (Swagger in Dev, optional) ---
 builder.Services.AddOpenApi();
 
@@ -29,6 +32,9 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+// --- Map Controllers ---
+app.MapControllers();
 
 // -------------------------------------------
 // DB Connectivity Check Endpoints
