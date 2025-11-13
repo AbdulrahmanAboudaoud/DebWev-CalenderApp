@@ -1,15 +1,9 @@
 ﻿// Program.cs — full single-file minimal API with EF Core + SQLite
 
 // Required namespaces
+
 using Microsoft.EntityFrameworkCore;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Data.Sqlite;
-using System.ComponentModel.DataAnnotations;
 using backend.Models;
-using Microsoft.AspNetCore.Hosting;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -26,7 +20,9 @@ builder.Services.AddOpenApi();
 
 var app = builder.Build();
 
-if (app.Environment.IsDevelopment())
+// Swagger is added
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen(c =>
 {
     app.MapOpenApi();
 }
@@ -40,31 +36,64 @@ app.MapControllers();
 // DB Connectivity Check Endpoints
 // -------------------------------------------
 
-// EF Core connectivity check
-app.MapGet("/db-ping", async (AppDbContext db) =>
+// Allows the browser to connect frontend to backend, it's called CORS (Cross-Origin Resource Sharing)
+builder.Services.AddCors(options =>
 {
-    var ok = await db.Database.CanConnectAsync();
-    return Results.Ok(new { connected = ok });
+    options.AddPolicy("ReactApp", policy =>
+    {
+        policy.WithOrigins("http://localhost:3000")
+            .AllowAnyHeader()
+            .AllowAnyMethod();
+    });
 });
 
-// Raw SQLite connection test (returns sqlite version)
-app.MapGet("/db-ping-raw", (IConfiguration cfg) =>
+
+var app = builder.Build();
+
+// This adds fake data on startup for testing purposes
+using (var scope = app.Services.CreateScope())
 {
-    var cs = cfg.GetConnectionString("DefaultConnection")!;
-    try
+    var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+    if (!db.Employees.Any())
     {
-        using var conn = new SqliteConnection(cs);
-        conn.Open();
-        using var cmd = conn.CreateCommand();
-        cmd.CommandText = "select sqlite_version()";
-        var ver = cmd.ExecuteScalar()?.ToString() ?? "unknown";
-        return Results.Ok(new { connected = true, version = ver });
+        db.Employees.AddRange(
+            new Employee { 
+                Name = "Admin", 
+                Email = "admin@company.com", 
+                Role = "Admin",
+                Department = "IT",
+                Password = "admin123"
+            },
+            new Employee { 
+                Name = "John Doe", 
+                Email = "john.doe@company.com", 
+                Role = "Employee",
+                Department = "Sales",
+                Password = "password123"
+            },
+            new Employee { 
+                Name = "Jane Smith", 
+                Email = "jane.smith@company.com", 
+                Role = "Employee", 
+                Department = "Marketing",
+                Password = "password123"
+            }
+        );
+        db.SaveChanges();
     }
-    catch (Exception ex)
-    {
-        return Results.Problem(detail: ex.ToString(), title: "Raw connect failed");
-    }
-});
+}
+
+// App configuration
+app.UseSwagger();
+app.UseSwaggerUI();
+
+
+// app.UseHttpsRedirection(); we don't want this for now
+app.UseCors("ReactApp");
+app.UseAuthorization();
+
+// This maps the controllers to the endpoints! (magic!!!)
+app.MapControllers();
 
 app.Run();
 
