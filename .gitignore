@@ -57,3 +57,5 @@ artifacts/
 *.db
 backend/appsettings.json
 .sln
+backend/Data/app.db-shm
+backend/Data/app.db-wal

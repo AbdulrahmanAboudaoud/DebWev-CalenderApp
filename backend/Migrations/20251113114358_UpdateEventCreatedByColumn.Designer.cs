@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -9,9 +10,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace backend.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251113114358_UpdateEventCreatedByColumn")]
+    partial class UpdateEventCreatedByColumn
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "9.0.1");
@@ -56,6 +59,9 @@ namespace backend.Migrations
                     b.Property<int>("CreatedBy")
                         .HasColumnType("INTEGER");
 
+                    b.Property<int>("CreatorUserId")
+                        .HasColumnType("INTEGER");
+
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasColumnType("TEXT");
@@ -72,7 +78,7 @@ namespace backend.Migrations
 
                     b.HasKey("EventId");
 
-                    b.HasIndex("CreatedBy");
+                    b.HasIndex("CreatorUserId");
 
                     b.ToTable("Events");
                 });
@@ -85,13 +91,16 @@ namespace backend.Migrations
                     b.Property<int>("UserId")
                         .HasColumnType("INTEGER");
 
+                    b.Property<int>("EmployeeUserId")
+                        .HasColumnType("INTEGER");
+
                     b.Property<string>("Status")
                         .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.HasKey("EventId", "UserId");
 
-                    b.HasIndex("UserId");
+                    b.HasIndex("EmployeeUserId");
 
                     b.ToTable("EventParticipations");
                 });
@@ -123,7 +132,12 @@ namespace backend.Migrations
                     b.Property<int>("GroupId")
                         .HasColumnType("INTEGER");
 
+                    b.Property<int>("EmployeeUserId")
+                        .HasColumnType("INTEGER");
+
                     b.HasKey("UserId", "GroupId");
+
+                    b.HasIndex("EmployeeUserId");
 
                     b.HasIndex("GroupId");
 
@@ -139,6 +153,9 @@ namespace backend.Migrations
                     b.Property<DateTime>("Date")
                         .HasColumnType("TEXT");
 
+                    b.Property<int>("EmployeeUserId")
+                        .HasColumnType("INTEGER");
+
                     b.Property<string>("Status")
                         .IsRequired()
                         .HasColumnType("TEXT");
@@ -148,7 +165,7 @@ namespace backend.Migrations
 
                     b.HasKey("AttendanceId");
 
-                    b.HasIndex("UserId");
+                    b.HasIndex("EmployeeUserId");
 
                     b.ToTable("OfficeAttendances");
                 });
@@ -186,6 +203,9 @@ namespace backend.Migrations
                     b.Property<DateTime>("BookingDate")
                         .HasColumnType("TEXT");
 
+                    b.Property<int>("EmployeeUserId")
+                        .HasColumnType("INTEGER");
+
                     b.Property<TimeOnly>("EndTime")
                         .HasColumnType("TEXT");
 
@@ -198,7 +218,7 @@ namespace backend.Migrations
 
                     b.HasKey("RoomId", "UserId", "BookingDate");
 
-                    b.HasIndex("UserId");
+                    b.HasIndex("EmployeeUserId");
 
                     b.ToTable("RoomBookings");
                 });
@@ -207,7 +227,7 @@ namespace backend.Migrations
                 {
                     b.HasOne("backend.Models.Employee", "Creator")
                         .WithMany("EventsCreated")
-                        .HasForeignKey("CreatedBy")
+                        .HasForeignKey("CreatorUserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -216,15 +236,15 @@ namespace backend.Migrations
 
             modelBuilder.Entity("backend.Models.EventParticipation", b =>
                 {
-                    b.HasOne("backend.Models.Event", "Event")
-                        .WithMany("Participants")
-                        .HasForeignKey("EventId")
+                    b.HasOne("backend.Models.Employee", "Employee")
+                        .WithMany("EventParticipations")
+                        .HasForeignKey("EmployeeUserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("backend.Models.Employee", "Employee")
-                        .WithMany("EventParticipations")
-                        .HasForeignKey("UserId")
+                    b.HasOne("backend.Models.Event", "Event")
+                        .WithMany("Participants")
+                        .HasForeignKey("EventId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -235,15 +255,15 @@ namespace backend.Migrations
 
             modelBuilder.Entity("backend.Models.GroupMembership", b =>
                 {
-                    b.HasOne("backend.Models.Group", "Group")
+                    b.HasOne("backend.Models.Employee", "Employee")
                         .WithMany("GroupMemberships")
-                        .HasForeignKey("GroupId")
+                        .HasForeignKey("EmployeeUserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("backend.Models.Employee", "Employee")
+                    b.HasOne("backend.Models.Group", "Group")
                         .WithMany("GroupMemberships")
-                        .HasForeignKey("UserId")
+                        .HasForeignKey("GroupId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -256,7 +276,7 @@ namespace backend.Migrations
                 {
                     b.HasOne("backend.Models.Employee", "Employee")
                         .WithMany("OfficeAttendances")
-                        .HasForeignKey("UserId")
+                        .HasForeignKey("EmployeeUserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -265,15 +285,15 @@ namespace backend.Migrations
 
             modelBuilder.Entity("backend.Models.RoomBooking", b =>
                 {
-                    b.HasOne("backend.Models.Room", "Room")
+                    b.HasOne("backend.Models.Employee", "Employee")
                         .WithMany("RoomBookings")
-                        .HasForeignKey("RoomId")
+                        .HasForeignKey("EmployeeUserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("backend.Models.Employee", "Employee")
+                    b.HasOne("backend.Models.Room", "Room")
                         .WithMany("RoomBookings")
-                        .HasForeignKey("UserId")
+                        .HasForeignKey("RoomId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 

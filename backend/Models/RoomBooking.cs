@@ -1,3 +1,5 @@
+using System.ComponentModel.DataAnnotations.Schema;
+
 namespace backend.Models;
 
 public class RoomBooking
@@ -9,6 +11,8 @@ public class RoomBooking
     public TimeOnly EndTime { get; set; }
     public string Purpose { get; set; } = default!;
 
+    [ForeignKey("UserId")]
     public Employee Employee { get; set; } = default!;
+    [ForeignKey("RoomId")]
     public Room Room { get; set; } = default!;
 }
