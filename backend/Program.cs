@@ -15,27 +15,6 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 // --- Add Controllers ---
 builder.Services.AddControllers();
 
-// --- OpenAPI (Swagger in Dev, optional) ---
-builder.Services.AddOpenApi();
-
-var app = builder.Build();
-
-// Swagger is added
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen(c =>
-{
-    app.MapOpenApi();
-}
-
-app.UseHttpsRedirection();
-
-// --- Map Controllers ---
-app.MapControllers();
-
-// -------------------------------------------
-// DB Connectivity Check Endpoints
-// -------------------------------------------
-
 // Allows the browser to connect frontend to backend, it's called CORS (Cross-Origin Resource Sharing)
 builder.Services.AddCors(options =>
 {
@@ -47,8 +26,13 @@ builder.Services.AddCors(options =>
     });
 });
 
+// Swagger - MUST be here, before builder.Build()
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
 
+// --- THIS LINE SEPARATES SERVICE REGISTRATION FROM APP BUILDING ---
 var app = builder.Build();
+// --- EVERYTHING AFTER THIS LINE IS MIDDLEWARE CONFIGURATION ---
 
 // This adds fake data on startup for testing purposes
 using (var scope = app.Services.CreateScope())
@@ -87,12 +71,8 @@ using (var scope = app.Services.CreateScope())
 app.UseSwagger();
 app.UseSwaggerUI();
 
-
-// app.UseHttpsRedirection(); we don't want this for now
 app.UseCors("ReactApp");
 app.UseAuthorization();
-
-// This maps the controllers to the endpoints! (magic!!!)
 app.MapControllers();
 
 app.Run();
