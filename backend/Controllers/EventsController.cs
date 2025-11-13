@@ -35,10 +35,11 @@ public class EventsController : ControllerBase
 
     // POST methods
     [HttpPost]
-    public async Task<ActionResult<Event>> CreateEvent([FromBody] Event Event)
+    public async Task<ActionResult<Event>> CreateEvent([FromBody] Event newEvent)
     {
-        _context.Events.Add(Event);
+        // Create a new Event
+        _context.Events.Add(newEvent);
         await _context.SaveChangesAsync();
-        return CreatedAtAction(nameof(GetEvent), new { id = Event.EventId }, Event);
+        return CreatedAtAction(nameof(GetEvent), new { id = newEvent.EventId }, newEvent);
     }
 }
