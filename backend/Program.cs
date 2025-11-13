@@ -3,10 +3,19 @@
 // Required namespaces
 
 using Microsoft.EntityFrameworkCore;
+using FluentValidation;
 using backend.Models;
+using FluentValidation.AspNetCore;
 
 
 var builder = WebApplication.CreateBuilder(args);
+
+// Adds validation!!
+// When adding a new model / validation, please add it here too!
+builder.Services.AddValidatorsFromAssemblyContaining<RoomBooking>();
+builder.Services.AddValidatorsFromAssemblyContaining<Employee>();
+builder.Services.AddFluentValidationAutoValidation();
+builder.Services.AddFluentValidationClientsideAdapters();
 
 // --- Database (SQLite from appsettings.json) ---
 builder.Services.AddDbContext<AppDbContext>(options =>

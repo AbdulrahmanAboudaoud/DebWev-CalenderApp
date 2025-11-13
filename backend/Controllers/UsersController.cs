@@ -9,8 +9,7 @@ namespace backend.Controllers;
 public class UsersController : ControllerBase
 {
     private readonly AppDbContext _context;
-
-    // Dependency injection provides the database context
+    
     public UsersController(AppDbContext context)
     {
         _context = context;
@@ -34,10 +33,16 @@ public class UsersController : ControllerBase
 
     // POST methods
     [HttpPost]
-    public async Task<ActionResult<Employee>> CreateEmployee([FromBody] Employee employee)
+    public async Task<ActionResult<Employee>> CreateEmployee([FromBody] Employee employee) // creates a new user
     {
+        if (await _context.Employees.AnyAsync(e => e.Email == employee.Email))
+        {
+            return BadRequest("Something went wrong");
+        }
+        
         _context.Employees.Add(employee);
         await _context.SaveChangesAsync();
+        
         return CreatedAtAction(nameof(GetEmployee), new { id = employee.UserId }, employee);
     }
 }
