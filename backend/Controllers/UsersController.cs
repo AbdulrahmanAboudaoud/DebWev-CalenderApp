@@ -20,16 +20,16 @@ public class UsersController : ControllerBase
     [HttpGet] // gets all users
     public async Task<ActionResult<IEnumerable<Employee>>> GetEmployees()
     {
-        var allEmployers = await _context.Employees.ToListAsync();
-        return Ok(allEmployers); // Wrap in Ok() for 200 status
+        var allEmployees = await _context.Employees.ToListAsync();
+        return Ok(allEmployees);
     }
 
-    [HttpGet("id")] // gets user by id
-    public async Task<ActionResult<Employee>> GetEmployer(int id)
+    [HttpGet("{id}")] // gets user by id
+    public async Task<ActionResult<Employee>> GetEmployee(int id)
     {
-        var employer = await _context.Employees.FindAsync(id);
-        if (employer == null) return NotFound(); // Handle not found
-        return employer;
+        var employee = await _context.Employees.FindAsync(id);
+        if (employee == null) return NotFound();
+        return Ok(employee);
     }
 
     // POST methods
@@ -38,6 +38,6 @@ public class UsersController : ControllerBase
     {
         _context.Employees.Add(employee);
         await _context.SaveChangesAsync();
-        return CreatedAtAction(nameof(GetEmployer), new { id = employee.UserId }, employee);
+        return CreatedAtAction(nameof(GetEmployee), new { id = employee.UserId }, employee);
     }
 }
