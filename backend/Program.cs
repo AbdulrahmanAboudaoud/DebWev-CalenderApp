@@ -12,15 +12,29 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-// Here are the controllers
+// --- Add Controllers ---
 builder.Services.AddControllers();
+
+// --- OpenAPI (Swagger in Dev, optional) ---
+builder.Services.AddOpenApi();
+
+var app = builder.Build();
 
 // Swagger is added
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
 {
-    c.SwaggerDoc("v1", new() { Title = "My API", Version = "v1" });
-});
+    app.MapOpenApi();
+}
+
+app.UseHttpsRedirection();
+
+// --- Map Controllers ---
+app.MapControllers();
+
+// -------------------------------------------
+// DB Connectivity Check Endpoints
+// -------------------------------------------
 
 // Allows the browser to connect frontend to backend, it's called CORS (Cross-Origin Resource Sharing)
 builder.Services.AddCors(options =>

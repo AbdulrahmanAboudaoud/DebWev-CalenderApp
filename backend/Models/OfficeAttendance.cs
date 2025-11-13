@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace backend.Models;
 
@@ -10,5 +11,6 @@ public class OfficeAttendance
     public DateTime Date { get; set; }
     public string Status { get; set; } = default!;
 
+    [ForeignKey("UserId")]
     public Employee Employee { get; set; } = default!;
 }
