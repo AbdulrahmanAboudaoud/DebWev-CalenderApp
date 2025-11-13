@@ -20,6 +20,7 @@ import Events from "./pages/user/Events/Events";
 import EventDetail from "./pages/user/Events/EventDetail";
 import RoomBooking from "./pages/user/Rooms/RoomBooking";
 import Attendance from "./pages/user/Attendance/Attendance";
+import TestPage from "./pages/test_page/TestPage";
 
 // Admin pages
 import AdminHome from "./pages/admin/Home/AdminHome";
@@ -48,6 +49,8 @@ root.render(
           <Route path="events/:eventId" element={<EventDetail />} />
           <Route path="room-booking" element={<RoomBooking />} />
           <Route path="attendance" element={<Attendance />} />
+          <Route path="testpage" element={<TestPage />} />
+
         </Route>
 
         {/* Admin app */}

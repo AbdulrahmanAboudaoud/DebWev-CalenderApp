@@ -20,6 +20,9 @@ function NavbarCenter() {
       <li>
         <NavLink to="/app/attendance" className={linkClass}>Attendance</NavLink>
       </li>
+      <li>
+        <NavLink to="/app/testpage" className={linkClass}>Test Page</NavLink>
+      </li>
     </ul>
   );
 }

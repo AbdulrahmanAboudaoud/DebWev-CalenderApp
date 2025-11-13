@@ -1,28 +1,13 @@
-// src/components/EmployeeList.tsx
-import React, { useEffect, useState } from 'react';
-import { employeeApi } from '../../services/api';
+// src/components/EmployeeList.tsx - FIXED VERSION
+import React from 'react';
 import { Employee } from '../../types/Employee';
 
-const EmployeeList: React.FC = () => {
-    const [employees, setEmployees] = useState<Employee[]>([]);
-    const [loading, setLoading] = useState(true);
+interface Props {
+    employees: Employee[];  // Add this interface
+}
 
-    useEffect(() => {
-        loadEmployees();
-    }, []);
-
-    const loadEmployees = async () => {
-        try {
-            const data = await employeeApi.getEmployees();
-            setEmployees(data);
-        } catch (error) {
-            console.error('Error:', error);
-        } finally {
-            setLoading(false);
-        }
-    };
-
-    if (loading) return <div>Loading...</div>;
+const EmployeeList: React.FC<Props> = ({ employees }) => {  // Receive employees as prop
+    // REMOVE all the state and useEffect - just use the prop!
 
     return (
         <div>
