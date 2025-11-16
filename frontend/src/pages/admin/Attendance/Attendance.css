@@ -1,0 +1,203 @@
+.attendance-page {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+/* Header */
+.attendance-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.attendance-header h2 {
+    margin: 0;
+    font-size: 1.6rem;
+}
+
+.attendance-subtitle {
+    margin: 0.3rem 0 0;
+    color: #6b7280;
+    font-size: 0.95rem;
+}
+
+/* Controls: search + filter */
+.attendance-controls {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+}
+
+/* Search input with icon */
+.attendance-search {
+    display: flex;
+    align-items: center;
+    background: #ffffff;
+    border-radius: 999px;
+    border: 1px solid #e5e7eb;
+    padding: 3px 10px;
+}
+
+.attendance-search-icon {
+    font-size: 0.9rem;
+    color: #9ca3af;
+    margin-right: 4px;
+}
+
+.attendance-search input {
+    border: none;
+    outline: none;
+    background: transparent;
+    font-size: 0.85rem;
+    padding: 4px 4px 4px 0;
+}
+
+/* Status filter select */
+.attendance-filter {
+    border-radius: 999px;
+    border: 1px solid #e5e7eb;
+    padding: 4px 10px;
+    font-size: 0.85rem;
+    background: #ffffff;
+    cursor: pointer;
+}
+
+/* Grid of user cards */
+.attendance-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+/* Individual card */
+.attendance-card {
+    background: #ffffff;
+    border-radius: 12px;
+    padding: 0.9rem 1rem;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+    border: 1px solid #e5e7eb;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.attendance-card-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+}
+
+.attendance-user-main {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+}
+
+/* Avatar circle */
+.attendance-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 999px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #ffffff;
+    font-weight: 600;
+    font-size: 1rem;
+}
+
+/* User text */
+.attendance-user-text {
+    display: flex;
+    flex-direction: column;
+}
+
+.attendance-user-name {
+    font-weight: 600;
+    font-size: 0.95rem;
+}
+
+.attendance-user-role {
+    font-size: 0.8rem;
+    color: #6b7280;
+}
+
+/* Status pill */
+.attendance-status-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 4px 8px;
+    border-radius: 999px;
+    font-size: 0.8rem;
+    white-space: nowrap;
+    width: 180px;
+    justify-content: center;
+}
+
+/* Status colors */
+.status-office {
+    background-color: #dcfce7;
+    color: #166534;
+}
+
+.status-home {
+    background-color: #dbeafe;
+    color: #1d4ed8;
+}
+
+.status-sick {
+    background-color: #fee2e2;
+    color: #b91c1c;
+}
+
+.status-vacation {
+    background-color: #fef3c7;
+    color: #92400e;
+}
+
+.status-offline {
+    background-color: #e5e7eb;
+    color: #374151;
+}
+
+.attendance-status-icon {
+    font-size: 0.9rem;
+}
+
+/* Footer */
+.attendance-card-footer {
+    display: flex;
+    justify-content: flex-start;
+}
+
+.attendance-updated {
+    font-size: 0.75rem;
+    color: #9ca3af;
+}
+
+/* Empty state */
+.attendance-empty {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 1rem;
+    color: #6b7280;
+    font-size: 0.9rem;
+}
+
+/* Small screens */
+@media (max-width: 600px) {
+    .attendance-card-top {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .attendance-status-pill {
+        margin-top: 0.25rem;
+    }
+}

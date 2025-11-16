@@ -19,7 +19,6 @@ import Home from "./pages/user/Home/Home";
 import Events from "./pages/user/Events/Events";
 import EventDetail from "./pages/user/Events/EventDetail";
 import RoomBooking from "./pages/user/Rooms/RoomBooking";
-import Attendance from "./pages/user/Attendance/Attendance";
 import TestPage from "./pages/test_page/TestPage";
 
 // Admin pages
@@ -27,6 +26,7 @@ import AdminHome from "./pages/admin/Home/AdminHome";
 import AdminEvents from "./pages/admin/Events/AdminEvents";
 import AdminEventDetail from "./pages/admin/Events/AdminEventDetail";
 import AdminRoomBooking from "./pages/admin/Rooms/AdminRoomBooking";
+import Attendance from "./pages/admin/Attendance/Attendance";
 import Users from "./pages/admin/Users/Users";
 
 const root = ReactDOM.createRoot(document.getElementById("root") as HTMLElement);
