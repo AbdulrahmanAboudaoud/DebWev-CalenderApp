@@ -82,7 +82,7 @@ ul li a:hover {
     color: white !important;
 }
 
-.UsersName{
+.UsersName {
     margin: 0px;
 }
 
@@ -154,4 +154,57 @@ ul li a:hover {
 .navbar {
     background-color: var(--WHITE);
     box-shadow: 0 2px 4px var(--SHADOW-COLOR);
+}
+
+/* Status in Navbar style*/
+
+.status-selector {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 4px 12px;
+    border-radius: 999px;
+    background-color: #f5f5f5;
+    border: 1px solid #e0e0e0;
+    font-size: 0.85rem;
+    max-width: 220px;
+}
+
+/* Status icon on the left */
+.status-icon {
+    font-size: 1rem;
+}
+
+/* Hide the native browser dropdown arrow */
+.status-select {
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    border: none;
+    background: transparent;
+    outline: none;
+    font-size: 0.85rem;
+    cursor: pointer;
+    padding-right: 22px;
+}
+
+/* Hover effect */
+.status-select:hover {
+    text-decoration: underline;
+}
+
+/* Custom PINK dropdown arrow */
+.status-selector::after {
+    content: "";
+    position: absolute;
+    right: 8px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 0;
+    height: 0;
+    border-left: 6px solid transparent;
+    border-right: 6px solid transparent;
+    border-top: 7px solid #E75A7CFF;
+    pointer-events: none;
 }
