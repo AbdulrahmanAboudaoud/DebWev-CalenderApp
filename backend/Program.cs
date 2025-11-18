@@ -4,6 +4,8 @@
 
 using Microsoft.EntityFrameworkCore;
 using backend.Models;
+using backend.Services.EmployeeService;
+using backend.Repository;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -14,6 +16,12 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 
 // --- Add Controllers ---
 builder.Services.AddControllers();
+
+// GUYS ADD YOUR SERVICES HERE!!
+builder.Services.AddScoped<IEmployeeService, EmployeeService>();
+
+// Register generic repository for DI (used by services/repositories)
+builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
 
 // Allows the browser to connect frontend to backend, it's called CORS (Cross-Origin Resource Sharing)
 builder.Services.AddCors(options =>

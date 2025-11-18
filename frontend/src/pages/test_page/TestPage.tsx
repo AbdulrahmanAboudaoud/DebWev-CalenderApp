@@ -1,7 +1,7 @@
 import './TestPage.css';
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import EmployeeManagement from '../../components/Employers/EmployeeManagement';
+import EmployeeManagement from '../../components/Employees/EmployeeManagement';
 
 
 function TestPage() {
