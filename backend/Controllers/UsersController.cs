@@ -1,43 +1,63 @@
 using backend.Models;
+using backend.Services.EmployeeService;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-
+using backend.Repository;
 namespace backend.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
 public class UsersController : ControllerBase
 {
-    private readonly AppDbContext _context;
+    private readonly IRepository<Employee> _repository;
+    private readonly IEmployeeService _employeeService;
 
     // Dependency injection provides the database context
-    public UsersController(AppDbContext context)
+    public UsersController(IRepository<Employee> repository, IEmployeeService employeeService)
     {
-        _context = context;
+        _repository = repository;
+        _employeeService = employeeService;
     }
 
-    // GET methods
+    // GET methods (read)
     [HttpGet] // gets all users
-    public async Task<ActionResult<IEnumerable<Employee>>> GetEmployees()
+    public IActionResult GetAll() => Ok(_repository.GetAll());
+
+    [HttpGet("{id}")]
+    public IActionResult GetById(int id)
     {
-        var allEmployees = await _context.Employees.ToListAsync();
-        return Ok(allEmployees);
+        var product = _repository.GetById(id);
+        return product == null ? NotFound() : Ok(product);
     }
 
-    [HttpGet("{id}")] // gets user by id
-    public async Task<ActionResult<Employee>> GetEmployee(int id)
+
+    // POST methods (create)
+    [HttpPost] // adds a new user
+    public IActionResult Add(Employee employee)
     {
-        var employee = await _context.Employees.FindAsync(id);
-        if (employee == null) return NotFound();
-        return Ok(employee);
+        _repository.Add(employee);
+        _repository.SaveChanges();
+        return CreatedAtAction(nameof(GetById), new { id = employee.UserId }, employee);
     }
 
-    // POST methods
-    [HttpPost]
-    public async Task<ActionResult<Employee>> CreateEmployee([FromBody] Employee employee)
+    // PUT methods (update)
+    [HttpPut("{id}")] // updates an existing user
+    public IActionResult Update(int id, Employee employee)
     {
-        _context.Employees.Add(employee);
-        await _context.SaveChangesAsync();
-        return CreatedAtAction(nameof(GetEmployee), new { id = employee.UserId }, employee);
+        if (id != employee.UserId) return BadRequest();
+        _repository.Update(employee);
+        _repository.SaveChanges();
+        return NoContent();
+    }
+
+    // Delete methods (delete)
+    [HttpDelete("{id}")]
+    public IActionResult Delete(int id) // deletes a user
+    {
+        var product = _repository.GetById(id);
+        if (product == null) return NotFound();
+        _repository.Delete(product);
+        _repository.SaveChanges();
+        return NoContent();
     }
 }

@@ -7,8 +7,6 @@ interface Props {
 }
 
 const EmployeeList: React.FC<Props> = ({ employees }) => {  // Receive employees as prop
-    // REMOVE all the state and useEffect - just use the prop!
-
     return (
         <div>
             <h2>Employees</h2>
