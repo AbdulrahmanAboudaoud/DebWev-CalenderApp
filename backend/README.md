@@ -13,45 +13,144 @@ This folder contains the ASP.NET Core Web API backend for the DebWev Calendar Ap
 ## Prerequisites
 
 - .NET SDK that supports `net9.0` (verify with `dotnet --version`)
-- `dotnet-ef` global tool (will be installed in quick start steps below)
+- `dotnet-ef` global tool
 
 ## Quick Start (Run Locally)
 
 These steps create a local SQLite database, apply migrations, and start the API on `http://localhost:5000`.
 
-From the repository root, run these commands:
-
+### All Platforms - Common Steps:
 ```bash
 cd backend
 dotnet restore
 dotnet build
 mkdir -p Data
-export ConnectionStrings__DefaultConnection="Data Source=Data/app.db"
+```
+
+### Platform-Specific Setup:
+
+#### 🪟 Windows (Command Prompt/PowerShell)
+```cmd
+REM Set connection string
+set ConnectionStrings__DefaultConnection="Data Source=Data/app.db"
+
+REM Install EF Core tools
 dotnet tool install --global dotnet-ef --version 9.*
+
+REM Add to PATH (permanent - run in Administrator Command Prompt)
+setx PATH "%PATH%;%USERPROFILE%\.dotnet\tools"
+
+REM Or temporary (run each session)
+set PATH=%PATH%;%USERPROFILE%\.dotnet\tools
+
+REM Continue with migrations
+dotnet ef migrations add InitialCreate
+dotnet ef database update
+dotnet run --urls "http://localhost:5000"
+```
+
+#### 🐧 Linux (Bash)
+```bash
+# Set connection string
+export ConnectionStrings__DefaultConnection="Data Source=Data/app.db"
+
+# Install EF Core tools
+dotnet tool install --global dotnet-ef --version 9.*
+
+# Add to PATH permanently
+echo 'export PATH="$PATH:$HOME/.dotnet/tools"' >> ~/.bashrc
+source ~/.bashrc
+
+# Continue with migrations
+dotnet ef migrations add InitialCreate
+dotnet ef database update
+dotnet run --urls "http://localhost:5000"
+```
+
+####  macOS (Zsh - Default shell)
+```bash
+# Set connection string
+export ConnectionStrings__DefaultConnection="Data Source=Data/app.db"
+
+# Install EF Core tools
+dotnet tool install --global dotnet-ef --version 9.*
+
+# Add to PATH permanently
+echo 'export PATH="$PATH:$HOME/.dotnet/tools"' >> ~/.zshrc
+source ~/.zshrc
+
+# Continue with migrations
+dotnet ef migrations add InitialCreate
+dotnet ef database update
+dotnet run --urls "http://localhost:5000"
+```
+
+#### 🐚 macOS/Linux (Fish Shell)
+```bash
+# Set connection string
+set -x ConnectionStrings__DefaultConnection "Data Source=Data/app.db"
+
+# Install EF Core tools
+dotnet tool install --global dotnet-ef --version 9.*
+
+# Add to PATH permanently
+set -U fish_user_paths $HOME/.dotnet/tools $fish_user_paths
+
+# Continue with migrations
+dotnet ef migrations add InitialCreate
 dotnet ef database update
 dotnet run --urls "http://localhost:5000"
 ```
 
 Then open the Swagger UI at `http://localhost:5000/swagger` to explore the API.
 
+## Current Application Structure
+
+### Program.cs Features:
+- **Automatic Data Directory Creation**: Creates `Data/` directory if it doesn't exist
+- **SQLite Database**: Configured via `appsettings.json`
+- **CORS Enabled**: For React frontend on `http://localhost:3000`
+- **Swagger/OpenAPI**: Automatic API documentation
+- **Seed Data**: Auto-populates with sample employees on first run
+- **Error Handling**: Try-catch around database operations
+
+### Database Entities:
+- `Employee` - User accounts with roles
+- `Event` - Calendar events
+- `EventParticipation` - Many-to-many relationship for event attendees
+- `OfficeAttendance` - Office presence tracking
+- `Room` & `RoomBooking` - Room reservation system
+- `Group` & `GroupMembership` - Team/group management
+
+### Current Services:
+- `EmployeeService` - Business logic for employee operations
+- `IRepository<T>` - Generic repository pattern for data access
+
 ## Configuration
 
-The app reads the connection string from `ConnectionStrings:DefaultConnection`.
-
-You can provide this via **environment variable** (recommended for local development):
-
-```bash
-export ConnectionStrings__DefaultConnection="Data Source=Data/app.db"
-```
-
-Or via **appsettings.json** (a sample is already included in this folder):
-
+### appsettings.json (Current):
 ```json
 {
   "ConnectionStrings": {
     "DefaultConnection": "Data Source=Data/app.db"
+  },
+  "Logging": {
+    "LogLevel": {
+      "Default": "Information"
+    }
   }
 }
+```
+
+### Environment Variable (Alternative):
+**Windows:**
+```cmd
+set ConnectionStrings__DefaultConnection="Data Source=Data/app.db"
+```
+
+**Linux/macOS:**
+```bash
+export ConnectionStrings__DefaultConnection="Data Source=Data/app.db"
 ```
 
 **Note:** The environment variable with double underscore (`ConnectionStrings__DefaultConnection`) maps to the nested configuration key `ConnectionStrings:DefaultConnection` in ASP.NET Core.
@@ -75,10 +174,64 @@ dotnet ef migrations add YourMigrationName
 dotnet ef database update
 ```
 
-If `dotnet ef` is not found, install the tool:
+## PATH Setup Troubleshooting by Platform
 
+### 🪟 Windows Issues:
+**If `dotnet-ef` not found after installation:**
+```cmd
+# Check if tools are installed
+dir %USERPROFILE%\.dotnet\tools
+
+# Temporary fix (run each session)
+set PATH=%PATH%;%USERPROFILE%\.dotnet\tools
+
+# Permanent fix (Administrator Command Prompt)
+setx PATH "%PATH%;%USERPROFILE%\.dotnet\tools" /M
+
+# Restart Command Prompt after permanent change
+```
+
+### 🐧 Linux Issues:
+**If `dotnet-ef` not found:**
 ```bash
-dotnet tool install --global dotnet-ef --version 9.*
+# Check installation
+ls ~/.dotnet/tools/
+
+# Manual PATH set
+export PATH="$PATH:$HOME/.dotnet/tools"
+
+# Verify shell and add to correct file
+echo $SHELL
+# If /bin/bash -> add to ~/.bashrc
+# If /bin/zsh -> add to ~/.zshrc
+```
+
+###  macOS Issues:
+**If `dotnet-ef` not found:**
+```bash
+# Check installation
+ls ~/.dotnet/tools/
+
+# For default macOS (Zsh)
+echo 'export PATH="$PATH:$HOME/.dotnet/tools"' >> ~/.zshrc
+source ~/.zshrc
+
+# If using Bash
+echo 'export PATH="$PATH:$HOME/.dotnet/tools"' >> ~/.bash_profile
+source ~/.bash_profile
+```
+
+### 🐚 Fish Shell Issues:
+**If `dotnet-ef` not found:**
+```fish
+# Check installation
+ls ~/.dotnet/tools/
+
+# Add to fish permanently
+set -U fish_user_paths $HOME/.dotnet/tools $fish_user_paths
+
+# Reload fish config
+source ~/.config/fish/config.fish
 ```
 
 ## DI Registration (Important)
@@ -87,40 +240,66 @@ The backend uses a generic repository pattern. The `IRepository<>` interface is 
 
 ```csharp
 builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
+builder.Services.AddScoped<IEmployeeService, EmployeeService>();
 ```
 
 This registration is already in place. If you add services that depend on `IRepository<T>`, they will resolve correctly.
 
+## Adding New Services
+
+When adding new services, register them in `Program.cs` in the services section:
+
+```csharp
+// GUYS ADD YOUR SERVICES HERE!!
+builder.Services.AddScoped<IEmployeeService, EmployeeService>();
+// Add your new services below:
+// builder.Services.AddScoped<IYourService, YourService>();
+```
+
 ## Troubleshooting
 
+### Common Issues:
+
+**dotnet-ef command not found:**
+- Follow the PATH setup instructions for your platform above
+- Restart your terminal after PATH changes
+
 **App crashes on startup with DB connection error:**
-- Ensure `ConnectionStrings__DefaultConnection` is set or `backend/appsettings.json` exists and points to a writable path (e.g., `Data/app.db`).
+- Ensure `Data/` directory exists and is writable
+- Check connection string is set correctly for your platform
 
-**DI errors complaining about `IRepository<T>`:**
-- Verify the repository registration line above is present in `Program.cs`.
-
-**Migrations fail with provider errors:**
-- Verify you have the correct EF Core provider installed (this project uses `Microsoft.EntityFrameworkCore.Sqlite` for local runs).
+**Database errors:**
+- Delete `Data/app.db` and run `dotnet ef database update` to recreate
+- Check if migrations are applied: `dotnet ef migrations list`
 
 **Build errors:**
-- Run `dotnet clean` then `dotnet build`.
+```bash
+dotnet clean
+dotnet restore
+dotnet build
+```
+
+**Port already in use:**
+```bash
+dotnet run --urls "http://localhost:5001"
+```
+
+## API Endpoints
+
+Once running, explore available endpoints at:
+- **Swagger UI**: `http://localhost:5000/swagger`
+- **Health Check**: `http://localhost:5000/api/employees` (after adding controller)
+
+## Seed Data
+
+The application automatically creates three sample employees on first run:
+- **Admin** (IT Department) - Full access
+- **John Doe** (Sales Department) - Employee role
+- **Jane Smith** (Marketing Department) - Employee role
 
 ## Local Development Notes
 
-- **CORS:** Configured to allow the frontend dev server at `http://localhost:3000`.
-- **Swagger UI:** Enabled at `/swagger`.
-- **Seed data:** Example `Employee` records are inserted on first run. Seed passwords are plaintext for local testing only — remove or change before any public deployment.
-
-## Optional: Run with PostgreSQL
-
-If you prefer PostgreSQL for development:
-
-1. Change the DbContext configuration in `Program.cs` from `UseSqlite(...)` to `UseNpgsql(...)`
-2. Provide a Postgres connection string via `ConnectionStrings:DefaultConnection`
-3. Ensure you have the `Npgsql.EntityFrameworkCore.PostgreSQL` package (already in dependencies)
-
-Example connection string:
-
-```
-Server=localhost;Port=5432;Database=calendar_app;User Id=postgres;Password=your_password;
-```
+- **CORS**: Configured for React dev server at `http://localhost:3000`
+- **Swagger UI**: Enabled at `/swagger` in development
+- **Auto Migration**: Database is automatically created with seed data
+- **Data Directory**: Created automatically if missing

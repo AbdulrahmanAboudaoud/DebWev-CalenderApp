@@ -19,7 +19,7 @@ public class EmployeesController : ControllerBase
     }
 
     // GET methods (read)
-    [HttpGet] // gets all users
+    [HttpGet] // gets all employees
     public IActionResult GetAll() => Ok(_employeeService.GetAll());
 
     [HttpGet("{id}")]

@@ -4,14 +4,14 @@ import { Employee } from "../types/Employee";
 export const employeeApi = {
   // GET all employees
   getEmployees: async (): Promise<Employee[]> => {
-    const response = await fetch(`${API_URL}/users`);
+    const response = await fetch(`${API_URL}/employees`);
     if (!response.ok) throw new Error("Failed to fetch employees");
     return response.json();
   },
 
   // GET employee by ID
   getEmployee: async (id: number): Promise<Employee> => {
-    const response = await fetch(`${API_URL}/users/${id}`);
+    const response = await fetch(`${API_URL}/employees/${id}`);
     if (!response.ok) throw new Error("Employee not found");
     return response.json();
   },
@@ -21,7 +21,7 @@ export const employeeApi = {
     employee: Omit<Employee, "userId">
   ): Promise<Employee> => {
     try {
-      const response = await fetch(`${API_URL}/users`, {
+      const response = await fetch(`${API_URL}/employees`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -30,16 +30,14 @@ export const employeeApi = {
       });
 
       if (!response.ok) {
-        const errorText = await response.text();
-        console.error("Server response:", errorText);
         throw new Error(
-          `Failed to create employee: ${response.status} ${response.statusText}`
+          `Failed to create employee: ${response.status}`
         );
       }
 
       return response.json();
     } catch (error) {
-      console.error("Network error:", error);
+      console.error("Other errors:", error);
       throw error;
     }
   },
