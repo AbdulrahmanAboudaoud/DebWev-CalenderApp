@@ -1,8 +1,4 @@
-﻿// Program.cs — full single-file minimal API with EF Core + SQLite
-
-// Required namespaces
-
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using backend.Models;
 using backend.Services.EmployeeService;
 using backend.Repository;
@@ -38,42 +34,60 @@ builder.Services.AddCors(options =>
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+// Ensure Data directory exists
+var dataDirectory = Path.Combine(Directory.GetCurrentDirectory(), "Data");
+if (!Directory.Exists(dataDirectory))
+{
+    Directory.CreateDirectory(dataDirectory);
+}
+
 // --- THIS LINE SEPARATES SERVICE REGISTRATION FROM APP BUILDING ---
 var app = builder.Build();
 // --- EVERYTHING AFTER THIS LINE IS MIDDLEWARE CONFIGURATION ---
 
 // This adds fake data on startup for testing purposes
-using (var scope = app.Services.CreateScope())
+try
 {
-    var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-    if (!db.Employees.Any())
+    using (var scope = app.Services.CreateScope())
     {
-        db.Employees.AddRange(
-            new Employee { 
-                Name = "Admin", 
-                Email = "admin@company.com", 
-                Role = "Admin",
-                Department = "IT",
-                Password = "admin123"
-            },
-            new Employee { 
-                Name = "John Doe", 
-                Email = "john.doe@company.com", 
-                Role = "Employee",
-                Department = "Sales",
-                Password = "password123"
-            },
-            new Employee { 
-                Name = "Jane Smith", 
-                Email = "jane.smith@company.com", 
-                Role = "Employee", 
-                Department = "Marketing",
-                Password = "password123"
-            }
-        );
-        db.SaveChanges();
+        var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+        if (!db.Employees.Any())
+        {
+            db.Employees.AddRange(
+                new Employee
+                {
+                    Name = "Admin",
+                    Email = "admin@company.com",
+                    Role = "Admin",
+                    Department = "IT",
+                    Password = "admin123"
+                },
+                new Employee
+                {
+                    Name = "John Doe",
+                    Email = "john.doe@company.com",
+                    Role = "Employee",
+                    Department = "Sales",
+                    Password = "password123"
+                },
+                new Employee
+                {
+                    Name = "Jane Smith",
+                    Email = "jane.smith@company.com",
+                    Role = "Employee",
+                    Department = "Marketing",
+                    Password = "password123"
+                }
+            );
+            db.SaveChanges();
+        }
     }
 }
+catch (Exception e)
+{
+    Console.WriteLine($"Error during: {e.Message}");
+}
+
 
 // App configuration
 app.UseSwagger();
