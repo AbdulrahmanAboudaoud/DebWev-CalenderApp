@@ -1,46 +1,63 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import timeGridPlugin from "@fullcalendar/timegrid";
 import EventModal from "../EventModal/EventModal";
+import { EventApi } from "../../services/EventApi";
 import "./Calendar.css";
 
 const Calendar: React.FC = () => {
     const [selectedEvent, setSelectedEvent] = useState(null);
     const [showModal, setShowModal] = useState(false);
+    const [events, setEvents] = useState<any[]>([]);
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        loadEvents();
+    }, []);
+
+    const loadEvents = async () => {
+        try {
+            setLoading(true);
+            const data = await EventApi.getAllEvents();
+            
+            // Transform API events to FullCalendar format
+            const calendarEvents = data.map(event => ({
+                id: event.eventId.toString(),
+                title: event.title,
+                start: event.startTime,
+                end: event.endTime,
+                extendedProps: {
+                    description: event.description,
+                    location: event.location,
+                    createdBy: event.createdBy
+                }
+            }));
+            
+            setEvents(calendarEvents);
+        } catch (error) {
+            console.error('Failed to load events:', error);
+        } finally {
+            setLoading(false);
+        }
+    };
 
     const handleEventClick = (clickInfo: any) => {
         setSelectedEvent(clickInfo.event);
         setShowModal(true);
     };
 
-    const events = [
-        {
-            title: "Go Carting",
-            start: '2025-10-26T10:00:00',
-            end: '2025-10-26T12:00:00'
-        },
-        {
-            title: "Group Yoga",
-            start: '2025-10-27T14:00:00',
-            end: '2025-10-27T15:30:00'
-        },
-        {
-            title: "Management Boxing Match",
-            start: '2025-11-01T09:00:00',
-            end: '2025-11-01T10:30:00'
-        },
-        {
-            title: "Biergarten",
-            start: '2025-11-05T13:00:00',
-            end: '2025-11-05T17:00:00'
-        },
-        {
-            title: "Higher Salary Protest",
-            start: '2025-11-05T11:00:00',
-            end: '2025-11-05T12:00:00'
-        }
-    ];
+    if (loading) {
+        return (
+            <div className="calendar-container">
+                <div className="text-center p-5">
+                    <div className="spinner-border" role="status">
+                        <span className="visually-hidden">Loading...</span>
+                    </div>
+                </div>
+            </div>
+        );
+    }
 
     return (
         <div className="calendar-container">
