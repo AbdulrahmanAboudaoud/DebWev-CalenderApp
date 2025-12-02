@@ -81,6 +81,76 @@ try
             );
             db.SaveChanges();
         }
+
+        if (!db.Events.Any())
+        {
+            db.Events.AddRange(
+                new Event
+                {
+                    Title = "Mandatory Fun Committee Meeting",
+                    Location = "The Fun Dungeon (basement)",
+                    Description = "Attendance is mandatory. Fun is optional. Bring your own enthusiasm.",
+                    StartTime = new DateTime(2026, 3, 3, 14, 0, 0),
+                    EndTime = new DateTime(2026, 3, 3, 15, 0, 0),
+                    CreatedBy = 1
+                },
+                new Event
+                {
+                    Title = "Office Chair Racing Championship",
+                    Location = "Main Hallway",
+                    Description = "Speed, skill, and questionable HR compliance. BYOC (Bring Your Own Chair). Helmets recommended but not required.",
+                    StartTime = new DateTime(2026, 3, 7, 16, 30, 0),
+                    EndTime = new DateTime(2026, 3, 7, 18, 0, 0),
+                    CreatedBy = 1
+                },
+                new Event
+                {
+                    Title = "Passive Aggressive Email Writing Workshop",
+                    Location = "Conference Room B",
+                    Description = "Per my last email... Learn to craft the perfect 'just following up' message. As previously discussed.",
+                    StartTime = new DateTime(2026, 3, 12, 10, 0, 0),
+                    EndTime = new DateTime(2026, 3, 12, 11, 30, 0),
+                    CreatedBy = 1
+                },
+                new Event
+                {
+                    Title = "Pretending to Work While Actually Napping Seminar",
+                    Location = "Your Desk",
+                    Description = "Master the art of strategic micro-napping. Learn advanced techniques like the 'Deep Thought Pose' and 'Email Contemplation'.",
+                    StartTime = new DateTime(2026, 3, 15, 13, 0, 0),
+                    EndTime = new DateTime(2026, 3, 15, 14, 0, 0),
+                    CreatedBy = 1
+                },
+                new Event
+                {
+                    Title = "Annual 'Reply All' Apology Session",
+                    Location = "Auditorium",
+                    Description = "A safe space for those who accidentally replied all. Tissues provided. Judgment guaranteed.",
+                    StartTime = new DateTime(2026, 3, 20, 11, 0, 0),
+                    EndTime = new DateTime(2026, 3, 20, 12, 0, 0),
+                    CreatedBy = 1
+                },
+                new Event
+                {
+                    Title = "Competitive Coffee Brewing Battle Royale",
+                    Location = "Break Room",
+                    Description = "Last person standing gets the good coffee beans. May the strongest brew win. BYOM (Bring Your Own Mug).",
+                    StartTime = new DateTime(2026, 3, 25, 9, 0, 0),
+                    EndTime = new DateTime(2026, 3, 25, 10, 30, 0),
+                    CreatedBy = 1
+                },
+                new Event
+                {
+                    Title = "Extreme Spreadsheet Makeover",
+                    Location = "IT Department",
+                    Description = "Transform boring spreadsheets into slightly less boring spreadsheets. Comic Sans will NOT be tolerated.",
+                    StartTime = new DateTime(2026, 3, 28, 15, 0, 0),
+                    EndTime = new DateTime(2026, 3, 28, 16, 30, 0),
+                    CreatedBy = 1
+                }
+            );
+            db.SaveChanges();
+        }
     }
 }
 catch (Exception e)
