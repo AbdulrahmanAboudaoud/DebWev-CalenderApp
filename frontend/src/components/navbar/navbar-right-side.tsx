@@ -2,9 +2,8 @@ import React, { useState } from "react";
 import logo from "../../assets/cute-calendar-sticker-free-png-4225752480.png";
 import "./NavBarStyle.css";
 import notification from "../../assets/notification.png";
-import { useNavigate } from 'react-router-dom';
-
-type StatusValue = "office" | "home" | "sick" | "vacation" | "offline";
+import { useNavigate } from "react-router-dom";
+import { attendanceApi, StatusValue } from "../../services/AttendanceApi";
 
 const STATUS_OPTIONS: { value: StatusValue; label: string; iconClass: string }[] = [
   { value: "office", label: "Working at office", iconClass: "bi-building" },
@@ -25,21 +24,28 @@ function NavbarRightSide() {
     navigate("/login");
   };
 
-  const handleStatusChange = (
+  const handleStatusChange = async (
     e: React.ChangeEvent<HTMLSelectElement>
   ) => {
     const newStatus = e.target.value as StatusValue;
     setStatus(newStatus);
 
-    // TODO: later send to backend:
-    // await api.updateStatus(newStatus);
+    console.log("Changing status to:", newStatus);
+
+    try {
+      await attendanceApi.updateMyStatus(newStatus);
+      console.log("Status updated successfully");
+    } catch (err) {
+      console.error("Error updating status", err);
+      // TODO: show toast or revert status if you want
+    }
   };
 
   return (
     <div className="nav-right">
       <p className="UsersName">John Doe</p>
 
-      {/* NEW STATUS DROPDOWN */}
+      {/* STATUS DROPDOWN */}
       <div className="status-selector">
         <i
           className={`bi ${currentStatus.iconClass} status-icon`}
@@ -62,6 +68,7 @@ function NavbarRightSide() {
       <a href={"#"} className={"NotificationBell"}>
         <img className="bell" src={notification} alt="Notification Bell" />
       </a>
+
       <button className="logoutButton" onClick={handleLogout}>
         Log Out
       </button>

@@ -1,16 +1,10 @@
-import React, { useMemo, useState } from "react";
+import React, { useMemo, useState, useEffect } from "react";
 import "./Attendance.css";
-
-type StatusValue = "office" | "home" | "sick" | "vacation" | "offline";
-
-type UserAttendance = {
-    id: number;
-    name: string;
-    role: string;
-    status: StatusValue;
-    lastUpdated: string;
-    avatarColor: string;
-};
+import {
+    attendanceApi,
+    AttendanceOverviewItem,
+    StatusValue,
+} from "../../../services/AttendanceApi";
 
 const STATUS_LABELS: Record<
     StatusValue,
@@ -23,62 +17,44 @@ const STATUS_LABELS: Record<
     offline: { label: "Offline", iconClass: "bi-slash-circle" },
 };
 
-const FAKE_USERS: UserAttendance[] = [
-    {
-        id: 1,
-        name: "John Doe",
-        role: "Frontend Developer",
-        status: "office",
-        lastUpdated: "2 min ago",
-        avatarColor: "#E75A7C",
-    },
-    {
-        id: 2,
-        name: "Sara Ahmed",
-        role: "Backend Developer",
-        status: "home",
-        lastUpdated: "10 min ago",
-        avatarColor: "#6C5CE7",
-    },
-    {
-        id: 3,
-        name: "Michael Chen",
-        role: "Product Owner",
-        status: "vacation",
-        lastUpdated: "Today, 09:15",
-        avatarColor: "#00B894",
-    },
-    {
-        id: 4,
-        name: "Emma Janssen",
-        role: "UX Designer",
-        status: "sick",
-        lastUpdated: "Today, 08:40",
-        avatarColor: "#0984E3",
-    },
-    {
-        id: 5,
-        name: "Liam Verhoeven",
-        role: "QA Engineer",
-        status: "offline",
-        lastUpdated: "Yesterday, 17:30",
-        avatarColor: "#FD9644",
-    },
-];
+// Random avatar colors for display
+const COLORS = ["#E75A7C", "#6C5CE7", "#00B894", "#0984E3", "#FD9644"];
 
 export default function Attendance() {
+    const [users, setUsers] = useState<AttendanceOverviewItem[]>([]);
     const [searchTerm, setSearchTerm] = useState("");
     const [statusFilter, setStatusFilter] = useState<StatusValue | "all">("all");
 
+    // Load real data from backend API
+    useEffect(() => {
+        const loadAttendance = async () => {
+            try {
+                const data = await attendanceApi.getTodayAttendance();
+                setUsers(data);
+            } catch (err) {
+                console.error("Error loading attendance", err);
+            }
+        };
+
+        loadAttendance();
+    }, []);
+
+    // Convert ISO date → readable format
+    const formatLastUpdated = (iso: string) => {
+        const date = new Date(iso);
+        return date.toLocaleString();
+    };
+
+    // Apply search + filter
     const filteredUsers = useMemo(() => {
-        return FAKE_USERS.filter((user) => {
+        return users.filter((user) => {
             const matchesName =
                 user.name.toLowerCase().includes(searchTerm.toLowerCase());
             const matchesStatus =
                 statusFilter === "all" ? true : user.status === statusFilter;
             return matchesName && matchesStatus;
         });
-    }, [searchTerm, statusFilter]);
+    }, [users, searchTerm, statusFilter]);
 
     return (
         <div className="page attendance-page">
@@ -92,10 +68,7 @@ export default function Attendance() {
 
                 <div className="attendance-controls">
                     <div className="attendance-search">
-                        <i
-                            className="bi bi-search attendance-search-icon"
-                            aria-hidden="true"
-                        ></i>
+                        <i className="bi bi-search attendance-search-icon"></i>
                         <input
                             type="text"
                             placeholder="Search by name..."
@@ -122,16 +95,17 @@ export default function Attendance() {
             </div>
 
             <div className="attendance-grid">
-                {filteredUsers.map((user) => {
+                {filteredUsers.map((user, index) => {
                     const statusMeta = STATUS_LABELS[user.status];
+                    const avatarColor = COLORS[index % COLORS.length];
 
                     return (
-                        <div key={user.id} className="attendance-card">
+                        <div key={user.attendanceId} className="attendance-card">
                             <div className="attendance-card-top">
                                 <div className="attendance-user-main">
                                     <div
                                         className="attendance-avatar"
-                                        style={{ backgroundColor: user.avatarColor }}
+                                        style={{ backgroundColor: avatarColor }}
                                     >
                                         {user.name.charAt(0).toUpperCase()}
                                     </div>
@@ -146,7 +120,6 @@ export default function Attendance() {
                                 >
                                     <i
                                         className={`bi ${statusMeta.iconClass} attendance-status-icon`}
-                                        aria-hidden="true"
                                     ></i>
                                     <span>{statusMeta.label}</span>
                                 </div>
@@ -154,7 +127,7 @@ export default function Attendance() {
 
                             <div className="attendance-card-footer">
                                 <span className="attendance-updated">
-                                    Last updated: {user.lastUpdated}
+                                    Last updated: {formatLastUpdated(user.lastUpdatedAt)}
                                 </span>
                             </div>
                         </div>
