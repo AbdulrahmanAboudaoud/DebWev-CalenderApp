@@ -19,7 +19,7 @@ const UpcomingEvents: React.FC = () => {
             setError(null);
             const data = await EventApi.getAllEvents();
             
-            // Filter upcoming events (events that haven't ended yet)
+            // Filter upcoming events
             const now = new Date();
             const upcomingEvents = data
                 .filter(event => new Date(event.endTime) > now)

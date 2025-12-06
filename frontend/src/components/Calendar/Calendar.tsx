@@ -21,7 +21,6 @@ const Calendar: React.FC = () => {
             setLoading(true);
             const data = await EventApi.getAllEvents();
             
-            // Transform API events to FullCalendar format
             const calendarEvents = data.map(event => ({
                 id: event.eventId.toString(),
                 title: event.title,
