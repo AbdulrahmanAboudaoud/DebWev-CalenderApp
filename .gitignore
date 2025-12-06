@@ -58,3 +58,4 @@ artifacts/
 .sln
 backend/Data/app.db-shm
 backend/Data/app.db-wal
+*.db-wal
