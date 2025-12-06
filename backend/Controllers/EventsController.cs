@@ -1,6 +1,7 @@
+using backend.DTOs;
 using backend.Models;
+using backend.Services.EventService;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 namespace backend.Controllers;
 
@@ -8,38 +9,82 @@ namespace backend.Controllers;
 [Route("api/[controller]")]
 public class EventsController : ControllerBase
 {
-    private readonly AppDbContext _context;
+    private readonly IEventService _eventService;
 
-    public EventsController(AppDbContext context)
+    public EventsController(IEventService eventService)
     {
-        _context = context;
+        _eventService = eventService;
     }
 
     // GET methods
-    [HttpGet] 
-    public async Task<ActionResult<IEnumerable<Event>>> GetEvents()
+    [HttpGet]
+    public ActionResult<IEnumerable<Event>> GetAll()
     {
-        // Gets all Events from the database
-        var allEvents = await _context.Events.ToListAsync();
-        return Ok(allEvents); 
+        return Ok(_eventService.GetAll());
     }
 
-    [HttpGet("{id}")]
-    public async Task<ActionResult<Event>> GetEvent(int id)
+    [HttpGet("{id:int}")]
+    public ActionResult<Event> GetById(int id)
     {
-        // Get a specific Event by ID
-        var Event = await _context.Events.FindAsync(id);
-        if (Event == null) return NotFound();
-        return Event;
+        var eventItem = _eventService.GetById(id);
+        return eventItem == null ? NotFound() : Ok(eventItem);
+    }
+
+    [HttpGet("title/{title}")]
+    public ActionResult<IEnumerable<Event>> GetByTitle(string title)
+    {
+        var events = _eventService.GetByTitle(title);
+        return Ok(events);
+    }
+
+    [HttpGet("creator/{creatorId:int}")]
+    public ActionResult<IEnumerable<Event>> GetByCreator(int creatorId)
+    {
+        var events = _eventService.GetByCreator(creatorId);
+        return Ok(events);
+    }
+
+    [HttpGet("upcoming")]
+    public ActionResult<IEnumerable<Event>> GetUpcoming()
+    {
+        var events = _eventService.GetUpcoming();
+        return Ok(events);
     }
 
     // POST methods
     [HttpPost]
-    public async Task<ActionResult<Event>> CreateEvent([FromBody] Event newEvent)
+    public ActionResult<Event> Create([FromBody] CreateEventDto dto)
     {
-        // Create a new Event
-        _context.Events.Add(newEvent);
-        await _context.SaveChangesAsync();
-        return CreatedAtAction(nameof(GetEvent), new { id = newEvent.EventId }, newEvent);
+        try
+        {
+            var createdEvent = _eventService.Create(dto);
+            return CreatedAtAction(nameof(GetById), new { id = createdEvent.EventId }, createdEvent);
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(ex.Message);
+        }
+    }
+
+    // PUT methods
+    [HttpPut("{id:int}")]
+    public ActionResult<Event> Update(int id, [FromBody] UpdateEventDto dto)
+    {
+        try
+        {
+            var updatedEvent = _eventService.Update(id, dto);
+            return updatedEvent == null ? NotFound() : Ok(updatedEvent);
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(ex.Message);
+        }
+    }
+
+    // DELETE methods
+    [HttpDelete("{id:int}")]
+    public ActionResult Delete(int id)
+    {
+        return _eventService.Delete(id) ? Ok() : NotFound();
     }
 }

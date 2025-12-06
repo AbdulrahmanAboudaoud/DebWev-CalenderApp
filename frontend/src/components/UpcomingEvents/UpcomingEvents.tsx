@@ -17,14 +17,7 @@ const UpcomingEvents: React.FC = () => {
         try {
             setLoading(true);
             setError(null);
-            const data = await EventApi.getAllEvents();
-            
-            // Filter upcoming events
-            const now = new Date();
-            const upcomingEvents = data
-                .filter(event => new Date(event.endTime) > now)
-                .sort((a, b) => new Date(a.startTime).getTime() - new Date(b.startTime).getTime());
-            
+            const upcomingEvents = await EventApi.getUpcomingEvents();
             setEvents(upcomingEvents);
         } catch (err) {
             setError(err instanceof Error ? err.message : 'Failed to load events');

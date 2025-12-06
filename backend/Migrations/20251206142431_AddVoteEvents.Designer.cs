@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -9,9 +10,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace backend.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251206142431_AddVoteEvents")]
+    partial class AddVoteEvents
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "9.0.1");
@@ -60,6 +63,11 @@ namespace backend.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
+                    b.Property<string>("Discriminator")
+                        .IsRequired()
+                        .HasMaxLength(13)
+                        .HasColumnType("TEXT");
+
                     b.Property<DateTime>("EndTime")
                         .HasColumnType("TEXT");
 
@@ -79,6 +87,10 @@ namespace backend.Migrations
                     b.HasIndex("CreatedBy");
 
                     b.ToTable("Events");
+
+                    b.HasDiscriminator().HasValue("Event");
+
+                    b.UseTphMappingStrategy();
                 });
 
             modelBuilder.Entity("backend.Models.EventParticipation", b =>
@@ -143,12 +155,8 @@ namespace backend.Migrations
                     b.Property<DateTime>("Date")
                         .HasColumnType("TEXT");
 
-                    b.Property<DateTime>("LastUpdatedAt")
-                        .HasColumnType("TEXT");
-
                     b.Property<string>("Status")
                         .IsRequired()
-                        .HasMaxLength(20)
                         .HasColumnType("TEXT");
 
                     b.Property<int>("UserId")
@@ -156,8 +164,7 @@ namespace backend.Migrations
 
                     b.HasKey("AttendanceId");
 
-                    b.HasIndex("UserId", "Date")
-                        .IsUnique();
+                    b.HasIndex("UserId");
 
                     b.ToTable("OfficeAttendances");
                 });
@@ -214,39 +221,12 @@ namespace backend.Migrations
 
             modelBuilder.Entity("backend.Models.VoteEvent", b =>
                 {
-                    b.Property<int>("VoteEventId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int>("CreatedBy")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<string>("Description")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.Property<DateTime>("EndTime")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("Location")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.Property<DateTime>("StartTime")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("Title")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
+                    b.HasBaseType("backend.Models.Event");
 
                     b.Property<int>("Votes")
                         .HasColumnType("INTEGER");
 
-                    b.HasKey("VoteEventId");
-
-                    b.HasIndex("CreatedBy");
-
-                    b.ToTable("VoteEvents");
+                    b.HasDiscriminator().HasValue("VoteEvent");
                 });
 
             modelBuilder.Entity("backend.Models.Event", b =>
@@ -326,17 +306,6 @@ namespace backend.Migrations
                     b.Navigation("Employee");
 
                     b.Navigation("Room");
-                });
-
-            modelBuilder.Entity("backend.Models.VoteEvent", b =>
-                {
-                    b.HasOne("backend.Models.Employee", "Creator")
-                        .WithMany()
-                        .HasForeignKey("CreatedBy")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Creator");
                 });
 
             modelBuilder.Entity("backend.Models.Employee", b =>

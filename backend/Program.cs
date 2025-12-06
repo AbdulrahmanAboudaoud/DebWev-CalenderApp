@@ -1,6 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using backend.Models;
 using backend.Services.EmployeeService;
+using backend.Services.EventService;
+using backend.Services.VoteEventService;
 using backend.Repository;
 
 
@@ -11,10 +13,16 @@ builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 // --- Add Controllers ---
-builder.Services.AddControllers();
+builder.Services.AddControllers()
+    .AddJsonOptions(options =>
+    {
+        options.JsonSerializerOptions.ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.IgnoreCycles;
+    });
 
 // GUYS ADD YOUR SERVICES HERE!!
 builder.Services.AddScoped<IEmployeeService, EmployeeService>();
+builder.Services.AddScoped<IEventService, EventService>();
+builder.Services.AddScoped<IVoteEventService, VoteEventService>();
 
 // Register generic repository for DI (used by services/repositories)
 builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
@@ -151,6 +159,83 @@ try
             );
             db.SaveChanges();
         }
+
+        if (!db.VoteEvents.Any())
+        {
+            db.VoteEvents.AddRange(
+                new VoteEvent
+                {
+                    Title = "Office Karaoke Night",
+                    Location = "Break Room",
+                    Description = "Show off your vocal talents (or lack thereof). Tone-deaf singers welcome! Free earplugs provided.",
+                    StartTime = new DateTime(2026, 4, 5, 18, 0, 0),
+                    EndTime = new DateTime(2026, 4, 5, 21, 0, 0),
+                    CreatedBy = 1,
+                    Votes = 23
+                },
+                new VoteEvent
+                {
+                    Title = "Bring Your Pet to Work Day",
+                    Location = "Office",
+                    Description = "Dogs, cats, fish, hamsters... even your emotional support rock is welcome. Chaos guaranteed!",
+                    StartTime = new DateTime(2026, 4, 10, 9, 0, 0),
+                    EndTime = new DateTime(2026, 4, 10, 17, 0, 0),
+                    CreatedBy = 1,
+                    Votes = 87
+                },
+                new VoteEvent
+                {
+                    Title = "Paint & Sip (Budget Wine Edition)",
+                    Location = "Conference Room A",
+                    Description = "Create masterpieces while sipping questionable wine. No artistic talent required, but low standards help.",
+                    StartTime = new DateTime(2026, 4, 15, 19, 0, 0),
+                    EndTime = new DateTime(2026, 4, 15, 21, 30, 0),
+                    CreatedBy = 1,
+                    Votes = 42
+                },
+                new VoteEvent
+                {
+                    Title = "Desk Decoration Competition",
+                    Location = "Your Workspace",
+                    Description = "Transform your cubicle into a shrine of personality. Prize for most extra goes to whoever brings a disco ball.",
+                    StartTime = new DateTime(2026, 4, 20, 10, 0, 0),
+                    EndTime = new DateTime(2026, 4, 20, 16, 0, 0),
+                    CreatedBy = 1,
+                    Votes = 31
+                },
+                new VoteEvent
+                {
+                    Title = "Pizza vs Tacos Debate Tournament",
+                    Location = "Cafeteria",
+                    Description = "The age-old question finally gets answered. Team Pizza vs Team Tacos. Winner gets free lunch for a week.",
+                    StartTime = new DateTime(2026, 4, 22, 12, 0, 0),
+                    EndTime = new DateTime(2026, 4, 22, 13, 30, 0),
+                    CreatedBy = 1,
+                    Votes = 156
+                },
+                new VoteEvent
+                {
+                    Title = "Retro Game Tournament",
+                    Location = "Game Room",
+                    Description = "Dust off those Mario Kart skills. Winner crowned Office Gaming Champion. Trash talk encouraged.",
+                    StartTime = new DateTime(2026, 4, 25, 17, 0, 0),
+                    EndTime = new DateTime(2026, 4, 25, 20, 0, 0),
+                    CreatedBy = 1,
+                    Votes = 68
+                },
+                new VoteEvent
+                {
+                    Title = "Lunch Roulette Mystery Meal",
+                    Location = "Mystery Location",
+                    Description = "Spin the wheel, take your chances. Could be sushi, could be gas station sandwiches. Adventure awaits!",
+                    StartTime = new DateTime(2026, 4, 28, 12, 0, 0),
+                    EndTime = new DateTime(2026, 4, 28, 13, 0, 0),
+                    CreatedBy = 1,
+                    Votes = 15
+                }
+            );
+            db.SaveChanges();
+        }
     }
 }
 catch (Exception e)
@@ -178,6 +263,7 @@ public class AppDbContext : DbContext
 
     public DbSet<Employee> Employees => Set<Employee>();
     public DbSet<Event> Events => Set<Event>();
+    public DbSet<VoteEvent> VoteEvents => Set<VoteEvent>();
     public DbSet<EventParticipation> EventParticipations => Set<EventParticipation>();
     public DbSet<OfficeAttendance> OfficeAttendances => Set<OfficeAttendance>();
     public DbSet<Room> Rooms => Set<Room>();

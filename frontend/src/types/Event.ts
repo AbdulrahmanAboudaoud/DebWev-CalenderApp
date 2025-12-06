@@ -16,3 +16,11 @@ export interface CreateEventDto {
   endTime: string;
   createdBy: number;
 }
+
+export interface UpdateEventDto {
+  title: string;
+  location: string;
+  description: string;
+  startTime: string;
+  endTime: string;
+}
