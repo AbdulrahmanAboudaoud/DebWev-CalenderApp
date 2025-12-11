@@ -4,6 +4,8 @@ using backend.Services.EmployeeService;
 using backend.Services.EventService;
 using backend.Services.VoteEventService;
 using backend.Repository;
+using backend.Services.AttendanceService;
+
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -23,6 +25,7 @@ builder.Services.AddControllers()
 builder.Services.AddScoped<IEmployeeService, EmployeeService>();
 builder.Services.AddScoped<IEventService, EventService>();
 builder.Services.AddScoped<IVoteEventService, VoteEventService>();
+builder.Services.AddScoped<IAttendanceService, AttendanceService>();
 
 // Register generic repository for DI (used by services/repositories)
 builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));

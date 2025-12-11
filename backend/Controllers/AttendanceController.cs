@@ -1,7 +1,6 @@
 using backend.Dtos;
-using backend.Models;
+using backend.Services.AttendanceService;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 namespace backend.Controllers;
 
@@ -9,79 +8,45 @@ namespace backend.Controllers;
 [Route("api/[controller]")]
 public class AttendanceController : ControllerBase
 {
-    private readonly AppDbContext _context;
+    private readonly IAttendanceService _attendanceService;
 
-    public AttendanceController(AppDbContext context)
+    public AttendanceController(IAttendanceService attendanceService)
     {
-        _context = context;
+        _attendanceService = attendanceService;
     }
 
-    // TODO later: get this from auth token 
+    // TODO later: get this from auth token / claims
     private int GetCurrentUserId()
     {
+        // For now, still using hardcoded user id (John Doe = 2)
         return 2;
     }
 
     // PUT api/attendance/my-status
     [HttpPut("my-status")]
-    public async Task<IActionResult> UpdateMyStatus([FromBody] UpdateStatusRequest request)
+    public IActionResult UpdateMyStatus([FromBody] UpdateStatusRequest request)
     {
         if (string.IsNullOrWhiteSpace(request.Status))
             return BadRequest("Status is required.");
 
-        var allowed = new[] { "office", "home", "sick", "vacation", "offline" };
-        if (!allowed.Contains(request.Status))
-            return BadRequest("Invalid status value.");
-
-        var userId = GetCurrentUserId();
-        var today = DateTime.UtcNow.Date;
-
-        var existing = await _context.OfficeAttendances
-            .SingleOrDefaultAsync(a => a.UserId == userId && a.Date == today);
-
-        if (existing == null)
+        try
         {
-            var attendance = new OfficeAttendance
-            {
-                UserId = userId,
-                Date = today,
-                Status = request.Status,
-                LastUpdatedAt = DateTime.UtcNow
-            };
-
-            _context.OfficeAttendances.Add(attendance);
+            var userId = GetCurrentUserId();
+            _attendanceService.UpdateUserStatus(userId, request.Status);
+            return NoContent();
         }
-        else
+        catch (ArgumentException ex)
         {
-            existing.Status = request.Status;
-            existing.LastUpdatedAt = DateTime.UtcNow;
+            // e.g. invalid status value
+            return BadRequest(ex.Message);
         }
-
-        await _context.SaveChangesAsync();
-        return NoContent();
     }
 
     // GET api/attendance/today
     [HttpGet("today")]
-    public async Task<ActionResult<IEnumerable<AttendanceOverviewItem>>> GetTodayAttendance()
+    public ActionResult<IEnumerable<AttendanceOverviewItem>> GetTodayAttendance()
     {
-        var today = DateTime.UtcNow.Date;
-
-        var records = await _context.OfficeAttendances
-            .Where(a => a.Date == today)
-            .Include(a => a.Employee)
-            .ToListAsync();
-
-        var result = records.Select(a => new AttendanceOverviewItem
-        {
-            AttendanceId = a.AttendanceId,
-            UserId = a.UserId,
-            Name = a.Employee.Name,   // from your Employee model
-            Role = a.Employee.Role,   // from your Employee model
-            Status = a.Status,
-            LastUpdatedAt = a.LastUpdatedAt
-        });
-
+        var result = _attendanceService.GetTodayAttendance();
         return Ok(result);
     }
 }
