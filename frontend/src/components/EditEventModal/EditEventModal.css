@@ -1,0 +1,35 @@
+.modal-title {
+	font-weight: 600;
+	color: #333;
+}
+
+.form-label {
+	font-weight: 500;
+	color: #555;
+	margin-bottom: 0.5rem;
+}
+
+.form-control:focus {
+	border-color: var(--PINK);
+	box-shadow: 0 0 0 0.2rem var(--PINK-TRANSPARENT);
+}
+
+.gap-2 {
+	gap: 0.5rem;
+}
+
+.btn-primary {
+	background-color: var(--PINK);
+	border-color: var(--PINK);
+}
+
+.btn-primary:hover {
+	background-color: var(--PINK-DARK);
+	border-color: var(--PINK-DARK);
+}
+
+.btn-primary:disabled {
+	background-color: var(--PINK);
+	border-color: var(--PINK);
+	opacity: 0.6;
+}

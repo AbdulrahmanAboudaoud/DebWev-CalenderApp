@@ -5,6 +5,7 @@ import timeGridPlugin from "@fullcalendar/timegrid";
 import interactionPlugin, { DateClickArg } from "@fullcalendar/interaction";
 import EventModal from "../EventModal/EventModal";
 import CreateEventModal from "../CreateEventModal/CreateEventModal";
+import EditEventModal from "../EditEventModal/EditEventModal";
 import { EventApi } from "../../services/EventApi";
 import "./Calendar.css";
 
@@ -12,6 +13,7 @@ const Calendar: React.FC = () => {
     const [selectedEvent, setSelectedEvent] = useState(null);
     const [showModal, setShowModal] = useState(false);
     const [showCreateModal, setShowCreateModal] = useState(false);
+    const [showEditModal, setShowEditModal] = useState(false);
     const [selectedDate, setSelectedDate] = useState<Date | null>(null);
     const [events, setEvents] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
@@ -53,6 +55,11 @@ const Calendar: React.FC = () => {
     const handleDateClick = (arg: DateClickArg) => {
         setSelectedDate(arg.date);
         setShowCreateModal(true);
+    };
+
+    const handleEditClick = () => {
+        setShowModal(false);
+        setShowEditModal(true);
     };
 
     if (loading) {
@@ -100,6 +107,7 @@ const Calendar: React.FC = () => {
                 show={showModal}
                 onHide={() => setShowModal(false)}
                 onEventDeleted={loadEvents}
+                onEditClick={handleEditClick}
                 event={selectedEvent}
             />
             <CreateEventModal
@@ -107,6 +115,12 @@ const Calendar: React.FC = () => {
                 onHide={() => setShowCreateModal(false)}
                 selectedDate={selectedDate}
                 onEventCreated={loadEvents}
+            />
+            <EditEventModal
+                show={showEditModal}
+                onHide={() => setShowEditModal(false)}
+                onEventUpdated={loadEvents}
+                event={selectedEvent}
             />
         </div>
     );

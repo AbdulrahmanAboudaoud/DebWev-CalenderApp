@@ -7,6 +7,7 @@ interface EventModalProps {
     show: boolean;
     onHide: () => void;
     onEventDeleted?: () => void;
+    onEditClick?: () => void;
     event: {
         id: string;
         title: string;
@@ -20,7 +21,7 @@ interface EventModalProps {
     } | null;
 }
 
-const EventModal: React.FC<EventModalProps> = ({ show, onHide, onEventDeleted, event }) => {
+const EventModal: React.FC<EventModalProps> = ({ show, onHide, onEventDeleted, onEditClick, event }) => {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
 
@@ -68,6 +69,9 @@ const EventModal: React.FC<EventModalProps> = ({ show, onHide, onEventDeleted, e
                 </div>
             </Modal.Body>
             <Modal.Footer>
+                <Button variant="primary" onClick={onEditClick} disabled={loading}>
+                    Edit
+                </Button>
                 <Button variant="danger" onClick={handleDelete} disabled={loading}>
                     {loading ? 'Deleting...' : 'Delete'}
                 </Button>
