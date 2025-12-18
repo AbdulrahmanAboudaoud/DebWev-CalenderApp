@@ -1,12 +1,15 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using backend.Models;
 using backend.Services.EmployeeService;
+using backend.Services.AttendanceService;
 using backend.Services.EventService;
 using backend.Services.VoteEventService;
 using backend.Repository;
-using backend.Services.AttendanceService;
-
-
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using backend.Services.AuthService;
+using BCrypt.Net;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -26,6 +29,7 @@ builder.Services.AddScoped<IEmployeeService, EmployeeService>();
 builder.Services.AddScoped<IEventService, EventService>();
 builder.Services.AddScoped<IVoteEventService, VoteEventService>();
 builder.Services.AddScoped<IAttendanceService, AttendanceService>();
+builder.Services.AddScoped<IAuthService, AuthService>();
 
 // Register generic repository for DI (used by services/repositories)
 builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
@@ -40,6 +44,30 @@ builder.Services.AddCors(options =>
             .AllowAnyMethod();
     });
 });
+
+// --- JWT Authentication ---
+var jwtSettings = builder.Configuration.GetSection("Jwt");
+var key = Encoding.UTF8.GetBytes(jwtSettings["Key"]!);
+
+builder.Services
+    .AddAuthentication(options =>
+    {
+        options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+        options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+    })
+    .AddJwtBearer(options =>
+    {
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuer = true,
+            ValidateAudience = true,
+            ValidateLifetime = true,
+            ValidateIssuerSigningKey = true,
+            ValidIssuer = jwtSettings["Issuer"],
+            ValidAudience = jwtSettings["Audience"],
+            IssuerSigningKey = new SymmetricSecurityKey(key)
+        };
+    });
 
 // Swagger - MUST be here, before builder.Build()
 builder.Services.AddEndpointsApiExplorer();
@@ -56,12 +84,41 @@ if (!Directory.Exists(dataDirectory))
 var app = builder.Build();
 // --- EVERYTHING AFTER THIS LINE IS MIDDLEWARE CONFIGURATION ---
 
-// This adds fake data on startup for testing purposes
+// This adds fake data on startup for testing purposes + migrates old passwords to bcrypt
 try
 {
     using (var scope = app.Services.CreateScope())
     {
         var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+
+        // Ensure schema is applied to the DB file that the app is actually using
+        db.Database.Migrate();
+
+        // ONE-TIME: hash existing plain-text passwords (keeps your old DB)
+        var employees = db.Employees.ToList();
+        var changed = 0;
+
+        foreach (var emp in employees)
+        {
+            // BCrypt hashes normally start with $2a$ / $2b$ / $2y$
+            if (!string.IsNullOrWhiteSpace(emp.Password) && !emp.Password.StartsWith("$2"))
+            {
+                emp.Password = BCrypt.Net.BCrypt.HashPassword(emp.Password);
+                changed++;
+            }
+        }
+
+        if (changed > 0)
+        {
+            db.SaveChanges();
+            Console.WriteLine($"Password migration: hashed {changed} employee password(s).");
+        }
+        else
+        {
+            Console.WriteLine("Password migration: nothing to migrate.");
+        }
+
+        // Seed employees (only if empty)
         if (!db.Employees.Any())
         {
             db.Employees.AddRange(
@@ -71,7 +128,7 @@ try
                     Email = "admin@company.com",
                     Role = "Admin",
                     Department = "IT",
-                    Password = "admin123"
+                    Password = BCrypt.Net.BCrypt.HashPassword("admin123")
                 },
                 new Employee
                 {
@@ -79,7 +136,7 @@ try
                     Email = "john.doe@company.com",
                     Role = "Employee",
                     Department = "Sales",
-                    Password = "password123"
+                    Password = BCrypt.Net.BCrypt.HashPassword("password123")
                 },
                 new Employee
                 {
@@ -87,7 +144,7 @@ try
                     Email = "jane.smith@company.com",
                     Role = "Employee",
                     Department = "Marketing",
-                    Password = "password123"
+                    Password = BCrypt.Net.BCrypt.HashPassword("password123")
                 }
             );
             db.SaveChanges();
@@ -246,12 +303,12 @@ catch (Exception e)
     Console.WriteLine($"Error during: {e.Message}");
 }
 
-
 // App configuration
 app.UseSwagger();
 app.UseSwaggerUI();
 
 app.UseCors("ReactApp");
+app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
 
@@ -279,6 +336,7 @@ public class AppDbContext : DbContext
         modelBuilder.Entity<EventParticipation>().HasKey(e => new { e.EventId, e.UserId });
         modelBuilder.Entity<GroupMembership>().HasKey(g => new { g.UserId, g.GroupId });
         modelBuilder.Entity<RoomBooking>().HasKey(r => new { r.RoomId, r.UserId, r.BookingDate });
+
         // one attendance per user per date
         modelBuilder.Entity<OfficeAttendance>().HasIndex(a => new { a.UserId, a.Date }).IsUnique();
     }

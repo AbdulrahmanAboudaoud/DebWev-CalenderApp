@@ -303,3 +303,7 @@ The application automatically creates three sample employees on first run:
 - **Swagger UI**: Enabled at `/swagger` in development
 - **Auto Migration**: Database is automatically created with seed data
 - **Data Directory**: Created automatically if missing
+
+## Required packages for auth (backend)
+- dotnet add package Microsoft.AspNetCore.Authentication.JwtBearer --version 8.0.0
+- dotnet add package BCrypt.Net-Next

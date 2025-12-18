@@ -1,11 +1,14 @@
+using System.Security.Claims;
 using backend.Dtos;
 using backend.Services.AttendanceService;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace backend.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
+[Authorize] // require JWT
 public class AttendanceController : ControllerBase
 {
     private readonly IAttendanceService _attendanceService;
@@ -15,14 +18,17 @@ public class AttendanceController : ControllerBase
         _attendanceService = attendanceService;
     }
 
-    // TODO later: get this from auth token / claims
     private int GetCurrentUserId()
     {
-        // For now, still using hardcoded user id (John Doe = 2)
-        return 2;
+        var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier);
+        if (userIdClaim == null)
+        {
+            throw new Exception("User ID claim not found");
+        }
+
+        return int.Parse(userIdClaim.Value);
     }
 
-    // PUT api/attendance/my-status
     [HttpPut("my-status")]
     public IActionResult UpdateMyStatus([FromBody] UpdateStatusRequest request)
     {
@@ -37,13 +43,12 @@ public class AttendanceController : ControllerBase
         }
         catch (ArgumentException ex)
         {
-            // e.g. invalid status value
             return BadRequest(ex.Message);
         }
     }
 
-    // GET api/attendance/today
     [HttpGet("today")]
+    // Optional: [Authorize(Roles = "Admin")]
     public ActionResult<IEnumerable<AttendanceOverviewItem>> GetTodayAttendance()
     {
         var result = _attendanceService.GetTodayAttendance();

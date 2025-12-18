@@ -21,6 +21,8 @@ function NavbarRightSide() {
     STATUS_OPTIONS.find((s) => s.value === status) ?? STATUS_OPTIONS[0];
 
   const handleLogout = () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
     navigate("/login");
   };
 

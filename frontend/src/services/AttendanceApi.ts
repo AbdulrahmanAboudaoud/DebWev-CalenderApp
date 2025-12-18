@@ -11,6 +11,18 @@ export type AttendanceOverviewItem = {
     lastUpdatedAt: string;
 };
 
+const getAuthHeaders = (): Record<string, string> => {
+    const token = localStorage.getItem("token");
+
+    if (!token) {
+        return {};
+    }
+
+    return {
+        Authorization: `Bearer ${token}`,
+    };
+};
+
 export const attendanceApi = {
     // PUT: update current user's status
     updateMyStatus: async (status: StatusValue): Promise<void> => {
@@ -19,6 +31,7 @@ export const attendanceApi = {
             headers: {
                 "Content-Type": "application/json",
                 Accept: "*/*",
+                ...getAuthHeaders(),
             },
             body: JSON.stringify({ status }),
         });
@@ -32,7 +45,11 @@ export const attendanceApi = {
 
     // GET: today's attendance overview (for admin page)
     getTodayAttendance: async (): Promise<AttendanceOverviewItem[]> => {
-        const response = await fetch(`${API_URL}/Attendance/today`);
+        const response = await fetch(`${API_URL}/Attendance/today`, {
+            headers: {
+                ...getAuthHeaders(),
+            },
+        });
 
         if (!response.ok) {
             const errorText = await response.text();

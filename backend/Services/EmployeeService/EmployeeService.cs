@@ -1,6 +1,7 @@
 using backend.Models;
 using backend.Repository;
 using DebWev_CalenderApp.DTOs;
+using BCrypt.Net;
 
 namespace backend.Services.EmployeeService
 {
@@ -18,10 +19,14 @@ namespace backend.Services.EmployeeService
 
         public Employee? Add(Employee employee)
         {
+            // Hash password before saving
+            employee.Password = BCrypt.Net.BCrypt.HashPassword(employee.Password);
+
             _employeeRepo.Add(employee);
             _employeeRepo.SaveChanges();
             return employee;
         }
+
         public Employee? Update(int id, EmployeeDto employee)
         {
             var existingEmployee = _employeeRepo.GetById(id);
@@ -31,12 +36,18 @@ namespace backend.Services.EmployeeService
             existingEmployee.Email = employee.email;
             existingEmployee.Role = employee.role;
             existingEmployee.Department = employee.department;
-            existingEmployee.Password = employee.password;
-            
+
+            // Only hash if a new password is provided
+            if (!string.IsNullOrWhiteSpace(employee.password))
+            {
+                existingEmployee.Password = BCrypt.Net.BCrypt.HashPassword(employee.password);
+            }
+
             _employeeRepo.Update(existingEmployee);
             _employeeRepo.SaveChanges();
             return existingEmployee;
         }
+
         public bool DeleteById(int id)
         {
             var employee = _employeeRepo.GetById(id);
@@ -46,6 +57,7 @@ namespace backend.Services.EmployeeService
             _employeeRepo.SaveChanges();
             return true;
         }
+
         public bool DeleteAll()
         {
             var employees = _employeeRepo.GetAll();
