@@ -10,13 +10,19 @@ using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using backend.Services.AuthService;
 using BCrypt.Net;
+using FluentValidation;
+using FluentValidation.AspNetCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Adds validation!!
 // When adding a new model / validation, please add it here too!
 builder.Services.AddValidatorsFromAssemblyContaining<RoomBooking>();
+builder.Services.AddValidatorsFromAssemblyContaining<Room>();
 builder.Services.AddValidatorsFromAssemblyContaining<Employee>();
+builder.Services.AddValidatorsFromAssemblyContaining<Event>();
+builder.Services.AddValidatorsFromAssemblyContaining<VoteEvent>();
+builder.Services.AddValidatorsFromAssemblyContaining<OfficeAttendance>();
 builder.Services.AddFluentValidationAutoValidation();
 builder.Services.AddFluentValidationClientsideAdapters();
 
@@ -37,6 +43,8 @@ builder.Services.AddScoped<IEventService, EventService>();
 builder.Services.AddScoped<IVoteEventService, VoteEventService>();
 builder.Services.AddScoped<IAttendanceService, AttendanceService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
+builder.Services.AddScoped<IRoomService, RoomService>();
+builder.Services.AddScoped<IRoomBookingService, RoomBookingService>();
 
 // Register generic repository for DI (used by services/repositories)
 builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));

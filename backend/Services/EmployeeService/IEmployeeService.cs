@@ -1,5 +1,5 @@
+using backend.DTOs;
 using backend.Models;
-using DebWev_CalenderApp.DTOs;
 
 namespace backend.Services.EmployeeService
 {
@@ -11,5 +11,6 @@ namespace backend.Services.EmployeeService
         Employee? Update(int id, EmployeeDto employee);
         bool DeleteById(int id);
         bool DeleteAll();
+        object Update(int id, EmployeeDto employee);
     }
 }

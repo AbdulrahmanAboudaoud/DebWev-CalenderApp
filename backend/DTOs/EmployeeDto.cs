@@ -1,4 +1,4 @@
-namespace DebWev_CalenderApp.DTOs
+namespace backend.DTOs
 {
     public record EmployeeDto(string name, string email, string role, string department, string password)
     {

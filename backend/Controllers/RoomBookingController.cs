@@ -33,7 +33,7 @@ public class RoomBookingController : ControllerBase
     
     // POST methods
     [HttpPost]
-    public async Task<ActionResult<RoomBooking>> CreateEmployee([FromBody] RoomBooking roomBooking) // creates a new user
+    public async Task<ActionResult<RoomBooking>> CreateRoomBooking([FromBody] RoomBooking roomBooking) // creates a new room booking
     {
         if (await _context.RoomBookings.AnyAsync(e => e.RoomId == roomBooking.RoomId && e.UserId == roomBooking.UserId))
         {
