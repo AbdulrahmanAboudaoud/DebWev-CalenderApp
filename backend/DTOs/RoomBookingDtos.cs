@@ -1,11 +1,11 @@
 namespace backend.DTOs
 {
-    public record RoomBookingDtos(int roomId, int userId, DateTime bookingDate, TimeOnly startTime, TimeOnly endTime)
+    public record RoomBookingDtos(int _roomId, int _userId, DateTime _bookingDate, TimeOnly _startTime, TimeOnly _endTime)
     {
-        int RoomId = roomId;
-        int UserId = userId;
-        DateTime BookingDate = bookingDate;
-        TimeOnly StartTime = startTime;
-        TimeOnly EndTime = endTime;
+        int RoomId = _roomId;
+        int UserId = _userId;
+        DateTime BookingDate = _bookingDate;
+        TimeOnly StartTime = _startTime;
+        TimeOnly EndTime = _endTime;
     }
 }

@@ -37,8 +37,6 @@ public class RoomService : IRoomService
         return true;
     }
 
-    public IEnumerable<Room> GetAll() => _roomRepo.GetAll();
-
     public Room? GetById(int id) => _roomRepo.GetById(id);
 
     public Room? GetByName(string name) => _roomRepo.Find(r => r.RoomName == name).FirstOrDefault();

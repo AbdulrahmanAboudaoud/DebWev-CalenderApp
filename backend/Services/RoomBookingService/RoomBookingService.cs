@@ -19,11 +19,11 @@ public class RoomBookingService : IRoomBookingService
     {
         var roomBooking = new RoomBooking
         {
-            RoomId = roomBookingDto.roomId,
-            UserId = roomBookingDto.userId,
-            BookingDate = roomBookingDto.bookingDate,
-            StartTime = roomBookingDto.startTime,
-            EndTime = roomBookingDto.endTime
+            RoomId = roomBookingDto._roomId,
+            UserId = roomBookingDto._userId,
+            BookingDate = roomBookingDto._bookingDate,
+            StartTime = roomBookingDto._startTime,
+            EndTime = roomBookingDto._endTime
         };
 
         _roomBookingRepo.Add(roomBooking);
