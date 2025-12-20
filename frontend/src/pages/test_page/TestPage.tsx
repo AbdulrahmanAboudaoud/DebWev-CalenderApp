@@ -1,16 +1,13 @@
 import './TestPage.css';
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import EmployeeManagement from '../../components/Employers/EmployeeManagement';
+import EmployeesList from '../../components/Employees/EmployeesList';
 
 
 function TestPage() {
   return (
     <div className="testPage">
-      <h2>Employer Test Page</h2>
-      <div className="employee-section">
-        <EmployeeManagement />
-      </div>
+        <EmployeesList />
     </div>
   );
 }

@@ -1,68 +1,99 @@
-import React, { useState } from "react";
-import { Card, Form, Badge, Button } from "react-bootstrap";
+import React, { useState, useEffect } from "react";
+import { Card, Form, Badge, Button, Spinner, Alert } from "react-bootstrap";
 import "./VoteEvents.css";
 import VoteModal from "../VoteModal/VoteModal";
+import { VoteEventApi, VoteEvent } from "../../services/VoteEventApi";
 
 type EventOption = {
   id: number;
   title: string;
   datetime: string;
   votes: number;
+  location?: string;
+  description?: string;
 };
-// fake data to make it look as if it works
-const events: EventOption[] = [
-  {
-    id: 1,
-    title: "Go Carting",
-    datetime: "Oct 26, 2024, 10:00 AM - 11:30 AM",
-    votes: 12,
-  },
-  {
-    id: 2,
-    title: "Group Yoga",
-    datetime: "Oct 27, 2024, 2:00 PM - 3:00 PM",
-    votes: 8,
-  },
-  {
-    id: 3,
-    title: "Management Boxing Match",
-    datetime: "Nov 01, 2024, 9:00 AM - 12:00 PM",
-    votes: 15,
-  },
-  {
-    id: 4,
-    title: "Biergarten",
-    datetime: "Nov 05, 2024, 1:00 PM - 5:00 PM",
-    votes: 10,
-  },
-  {
-    id: 5,
-    title: "Higher Salary Protest",
-    datetime: "Nov 05, 2024, 5:00 PM - 12:00 AM",
-    votes: 883,
-  },
-  {
-    id: 6,
-    title: "Company Picnic",
-    datetime: "Nov 12, 2024, 12:00 PM - 4:00 PM",
-    votes: 25,
-  },
-  {
-    id: 7,
-    title: "Tech Talk: Future of AI",
-    datetime: "Nov 15, 2024, 3:00 PM - 4:30 PM",
-    votes: 30,
-  }
-];
 
 const VoteEvents: React.FC = () => {
-  const [selectedEvent, setSelectedEvent] = useState<EventOption>(events[0]);
+  const [events, setEvents] = useState<EventOption[]>([]);
+  const [selectedEvent, setSelectedEvent] = useState<EventOption | null>(null);
   const [showModal, setShowModal] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    loadVoteEvents();
+  }, []);
+
+  const loadVoteEvents = async () => {
+    try {
+      setLoading(true);
+      setError(null);
+      const data = await VoteEventApi.getAllVoteEvents();
+      
+      // Transform API data to component format
+      const formattedEvents = data.map((event: VoteEvent) => ({
+        id: event.voteEventId,
+        title: event.title.trim(),
+        datetime: event.startTime,
+        votes: event.votes,
+        location: event.location,
+        description: event.description
+      }));
+      
+      setEvents(formattedEvents);
+    } catch (err) {
+      setError('Failed to load vote events. Please try again.');
+      console.error('Error loading vote events:', err);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const handleSelect = (event: EventOption) => setSelectedEvent(event);
-  const handleVote = () => {
-    setShowModal(true);
+  
+  const handleVote = async () => {
+    if (!selectedEvent) return;
+    
+    try {
+      await VoteEventApi.voteForEvent(selectedEvent.id);
+      setShowModal(true);
+      await loadVoteEvents();
+    } catch (err) {
+      console.error('Error voting:', err);
+      alert('Failed to cast vote. Please try again.');
+    }
   };
+
+  if (loading) {
+    return (
+      <div className="vote-events">
+        <h2>Vote for Next Event</h2>
+        <div className="text-center p-5">
+          <Spinner animation="border" role="status">
+            <span className="visually-hidden">Loading...</span>
+          </Spinner>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="vote-events">
+        <h2>Vote for Next Event</h2>
+        <Alert variant="danger">{error}</Alert>
+      </div>
+    );
+  }
+
+  if (events.length === 0) {
+    return (
+      <div className="vote-events">
+        <h2>Vote for Next Event</h2>
+        <Alert variant="info">No events available for voting at the moment.</Alert>
+      </div>
+    );
+  }
 
   return (
     <div className="vote-events">
@@ -72,7 +103,7 @@ const VoteEvents: React.FC = () => {
           {events.map((event) => (
             <Card
               key={event.id}
-              className={`event-card ${selectedEvent.id === event.id ? "selected" : ""}`}
+              className={`event-card ${selectedEvent?.id === event.id ? "selected" : ""}`}
               onClick={() => handleSelect(event)}
             >
               <Card.Body className="event-card-body">
@@ -83,7 +114,7 @@ const VoteEvents: React.FC = () => {
                     id={`event-${event.id}`}
                     label={event.title}
                     onChange={() => handleSelect(event)}
-                    checked={selectedEvent.id === event.id}
+                    checked={selectedEvent?.id === event.id}
                     className="event-radio"
                   />
                   <div className="event-datetime">{event.datetime}</div>

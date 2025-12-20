@@ -1,0 +1,34 @@
+.modal-title {
+    font-weight: 600;
+    color: #333;
+}
+
+.form-label {
+    font-weight: 500;
+    color: #555;
+    margin-bottom: 0.5rem;
+}
+
+.form-control:focus {
+    border-color: #FF69B4;
+    box-shadow: 0 0 0 0.2rem rgba(255, 105, 180, 0.25);
+}
+
+.gap-2 {
+    gap: 0.5rem;
+}
+
+.btn-primary {
+    background-color: #FF69B4;
+    border-color: #FF69B4;
+}
+
+.btn-primary:hover {
+    background-color: #FF1493;
+    border-color: #FF1493;
+}
+
+.btn-primary:disabled {
+    background-color: #FFB6D9;
+    border-color: #FFB6D9;
+}

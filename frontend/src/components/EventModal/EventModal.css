@@ -19,3 +19,29 @@
 .btn-secondary:hover {
     background-color: var(--PINK-DARK);
 }
+
+.event-detail {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.detail-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 8px;
+    background-color: #f8f9fa;
+    border-radius: 8px;
+}
+
+.detail-icon {
+    font-size: 20px;
+    min-width: 24px;
+}
+
+.detail-text {
+    flex: 1;
+    color: #333;
+    line-height: 1.5;
+}

@@ -33,6 +33,19 @@
   color: var(--BLACK);
 }
 
+/* Hover effect on calendar dates */
+.fc .fc-daygrid-day:hover {
+  background-color: var(--PINK-TRANSPARENT) !important;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.fc .fc-timegrid-slot:hover {
+  background-color: var(--PINK-TRANSPARENT) !important;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
 .fc .fc-col-header-cell-cushion {
   color: var(--PINK-DARK) !important;
   text-decoration: none !important;

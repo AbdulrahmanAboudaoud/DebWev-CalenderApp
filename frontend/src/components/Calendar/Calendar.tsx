@@ -1,51 +1,83 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import timeGridPlugin from "@fullcalendar/timegrid";
+import interactionPlugin, { DateClickArg } from "@fullcalendar/interaction";
 import EventModal from "../EventModal/EventModal";
+import CreateEventModal from "../CreateEventModal/CreateEventModal";
+import EditEventModal from "../EditEventModal/EditEventModal";
+import { EventApi } from "../../services/EventApi";
 import "./Calendar.css";
 
 const Calendar: React.FC = () => {
     const [selectedEvent, setSelectedEvent] = useState(null);
     const [showModal, setShowModal] = useState(false);
+    const [showCreateModal, setShowCreateModal] = useState(false);
+    const [showEditModal, setShowEditModal] = useState(false);
+    const [selectedDate, setSelectedDate] = useState<Date | null>(null);
+    const [events, setEvents] = useState<any[]>([]);
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        loadEvents();
+    }, []);
+
+    const loadEvents = async () => {
+        try {
+            setLoading(true);
+            const data = await EventApi.getAllEvents();
+            
+            const calendarEvents = data.map(event => ({
+                id: event.eventId.toString(),
+                title: event.title,
+                start: event.startTime,
+                end: event.endTime,
+                extendedProps: {
+                    description: event.description,
+                    location: event.location,
+                    createdBy: event.createdBy
+                }
+            }));
+            
+            setEvents(calendarEvents);
+        } catch (error) {
+            console.error('Failed to load events:', error);
+        } finally {
+            setLoading(false);
+        }
+    };
 
     const handleEventClick = (clickInfo: any) => {
         setSelectedEvent(clickInfo.event);
         setShowModal(true);
     };
 
-    const events = [
-        {
-            title: "Go Carting",
-            start: '2025-10-26T10:00:00',
-            end: '2025-10-26T12:00:00'
-        },
-        {
-            title: "Group Yoga",
-            start: '2025-10-27T14:00:00',
-            end: '2025-10-27T15:30:00'
-        },
-        {
-            title: "Management Boxing Match",
-            start: '2025-11-01T09:00:00',
-            end: '2025-11-01T10:30:00'
-        },
-        {
-            title: "Biergarten",
-            start: '2025-11-05T13:00:00',
-            end: '2025-11-05T17:00:00'
-        },
-        {
-            title: "Higher Salary Protest",
-            start: '2025-11-05T11:00:00',
-            end: '2025-11-05T12:00:00'
-        }
-    ];
+    const handleDateClick = (arg: DateClickArg) => {
+        setSelectedDate(arg.date);
+        setShowCreateModal(true);
+    };
+
+    const handleEditClick = () => {
+        setShowModal(false);
+        setShowEditModal(true);
+    };
+
+    if (loading) {
+        return (
+            <div className="calendar-container">
+                <div className="text-center p-5">
+                    <div className="spinner-border" role="status">
+                        <span className="visually-hidden">Loading...</span>
+                    </div>
+                </div>
+            </div>
+        );
+    }
 
     return (
         <div className="calendar-container">
             <FullCalendar
-                plugins={[dayGridPlugin, timeGridPlugin]}
+                plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
                 initialView="timeGridWeek"
                 headerToolbar={{
                     left: 'prev,next',
@@ -58,7 +90,7 @@ const Calendar: React.FC = () => {
                     }
                 }}
                 events={events}
-                height={window.innerWidth <= 768 ? "auto" : "auto"}
+                height="auto"
                 slotMinTime="08:00:00"
                 slotMaxTime="20:00:00"
                 allDaySlot={false}
@@ -68,10 +100,26 @@ const Calendar: React.FC = () => {
                     week: 'Week'
                 }}
                 eventClick={handleEventClick}
-            />    
+                dateClick={handleDateClick}
+                selectable={true}
+            />
             <EventModal
                 show={showModal}
                 onHide={() => setShowModal(false)}
+                onEventDeleted={loadEvents}
+                onEditClick={handleEditClick}
+                event={selectedEvent}
+            />
+            <CreateEventModal
+                show={showCreateModal}
+                onHide={() => setShowCreateModal(false)}
+                selectedDate={selectedDate}
+                onEventCreated={loadEvents}
+            />
+            <EditEventModal
+                show={showEditModal}
+                onHide={() => setShowEditModal(false)}
+                onEventUpdated={loadEvents}
                 event={selectedEvent}
             />
         </div>

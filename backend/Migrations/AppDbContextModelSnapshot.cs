@@ -143,8 +143,12 @@ namespace backend.Migrations
                     b.Property<DateTime>("Date")
                         .HasColumnType("TEXT");
 
+                    b.Property<DateTime>("LastUpdatedAt")
+                        .HasColumnType("TEXT");
+
                     b.Property<string>("Status")
                         .IsRequired()
+                        .HasMaxLength(20)
                         .HasColumnType("TEXT");
 
                     b.Property<int>("UserId")
@@ -152,7 +156,8 @@ namespace backend.Migrations
 
                     b.HasKey("AttendanceId");
 
-                    b.HasIndex("UserId");
+                    b.HasIndex("UserId", "Date")
+                        .IsUnique();
 
                     b.ToTable("OfficeAttendances");
                 });
@@ -205,6 +210,43 @@ namespace backend.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("RoomBookings");
+                });
+
+            modelBuilder.Entity("backend.Models.VoteEvent", b =>
+                {
+                    b.Property<int>("VoteEventId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("CreatedBy")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("EndTime")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Location")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("StartTime")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("Votes")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("VoteEventId");
+
+                    b.HasIndex("CreatedBy");
+
+                    b.ToTable("VoteEvents");
                 });
 
             modelBuilder.Entity("backend.Models.Event", b =>
@@ -284,6 +326,17 @@ namespace backend.Migrations
                     b.Navigation("Employee");
 
                     b.Navigation("Room");
+                });
+
+            modelBuilder.Entity("backend.Models.VoteEvent", b =>
+                {
+                    b.HasOne("backend.Models.Employee", "Creator")
+                        .WithMany()
+                        .HasForeignKey("CreatedBy")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Creator");
                 });
 
             modelBuilder.Entity("backend.Models.Employee", b =>
