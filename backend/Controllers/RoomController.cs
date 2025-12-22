@@ -1,8 +1,6 @@
 using backend.Models;
-using backend.Services.EmployeeService;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using backend.Repository;
+using backend.Services;
 using backend.DTOs;
 namespace backend.Controllers;
 
@@ -10,73 +8,63 @@ namespace backend.Controllers;
 [Route("api/[controller]")]
 public class RoomController : ControllerBase
 {
-    private readonly AppDbContext _context;
+    private readonly IRoomService _service;
     
-    public RoomController(AppDbContext context)
+    public RoomController(IRoomService roomService)
     {
-        _context = context;
+        _service = roomService;
     }
     
     // GET methods
     [HttpGet]
     public async Task<ActionResult<IEnumerable<Room>>> GetRooms()
     {
-        var allRooms = await _context.Rooms.ToListAsync();
+        var allRooms = _service.GetAll();
         return Ok(allRooms);
     }
 
+    [HttpGet("{id}")]
     public async Task<ActionResult<Room>> GetRoom(int id)
     {
-        var room = await _context.Rooms.FindAsync(id);
+        var room = _service.GetById(id);
         if (room == null) return NotFound();
         return Ok(room);
     }
     
     // POST methods
     [HttpPost]
-    public async Task<ActionResult<Room>> CreateRoom([FromBody] Room room) // creates a new room
+    public async Task<ActionResult<Room>> CreateRoom([FromBody] CreateRoomDto dto) // creates a new room
     {
-        if (await _context.Rooms.AnyAsync(e => e.RoomName == room.RoomName))
+        try 
         {
-            return BadRequest("Room with the same name already exists");
+            var createdRoom = _service.Create(dto);
+            return CreatedAtAction(nameof(GetRoom), new { id = createdRoom.RoomId }, createdRoom);
         }
-        
-        _context.Rooms.Add(room);
-        await _context.SaveChangesAsync();
-        
-        return CreatedAtAction(nameof(GetRoom), new { id = room.RoomId }, room);
+        catch(Exception ex)
+        {
+            return BadRequest(ex.Message);
+        }
     }
 
     // PUT methods
     [HttpPut("{id:int}")]
-    public async Task<IActionResult> UpdateRoom(int id, [FromBody] Room room) // updates an existing room
+    public async Task<IActionResult> UpdateRoom(int id, [FromBody] UpdateRoomDto dto) // updates an existing room
     {
-        var existingRoom = await _context.Rooms.FindAsync(id);
-        if (existingRoom == null)
+        try
         {
-            return NotFound();
+            var updatedRoom = _service.Update(id, dto);
+            return updatedRoom == null ? NotFound() : Ok(updatedRoom);
         }
-
-        existingRoom.RoomName = room.RoomName;
-        existingRoom.Capacity = room.Capacity;
-        existingRoom.Location = room.Location;
-
-        await _context.SaveChangesAsync();
-        return Ok(existingRoom);
+        catch (Exception ex)
+        {
+            return BadRequest(ex.Message);
+        }
     }
 
     // DELETE methods
     [HttpDelete("{id}")]
     public async Task<IActionResult> DeleteRoom(int id) // deletes a room
     {
-        var room = await _context.Rooms.FindAsync(id);
-        if (room == null)
-        {
-            return NotFound();
-        }
-
-        _context.Rooms.Remove(room);
-        await _context.SaveChangesAsync();
-        return Ok();
+        return _service.DeleteById(id) ? Ok() : NotFound();
     }
 }

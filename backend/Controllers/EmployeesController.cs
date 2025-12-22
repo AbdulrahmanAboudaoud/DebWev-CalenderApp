@@ -42,7 +42,7 @@ public class EmployeesController : ControllerBase
     public IActionResult Update(int id, [FromBody] EmployeeDto employee)
     {
         var x = _employeeService.Update(id, employee);
-        return x==null? NotFound(): Ok(x);
+        return x == null ? NotFound(): Ok(x);
     }
 
     // Delete methods (delete)

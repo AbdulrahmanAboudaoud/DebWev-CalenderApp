@@ -61,6 +61,7 @@ public class RoomBookingService : IRoomBookingService
         existingRoomBooking.BookingDate = roomBooking.BookingDate;
         existingRoomBooking.StartTime = roomBooking.StartTime;
         existingRoomBooking.EndTime = roomBooking.EndTime;
+        existingRoomBooking.Purpose = roomBooking.Purpose;
 
         _roomBookingRepo.Update(existingRoomBooking);
         _roomBookingRepo.SaveChanges();

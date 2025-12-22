@@ -10,21 +10,21 @@ using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using backend.Services.AuthService;
 using BCrypt.Net;
-using FluentValidation;
-using FluentValidation.AspNetCore;
+// using FluentValidation;
+// using FluentValidation.AspNetCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Adds validation!!
 // When adding a new model / validation, please add it here too!
-builder.Services.AddValidatorsFromAssemblyContaining<RoomBooking>();
-builder.Services.AddValidatorsFromAssemblyContaining<Room>();
-builder.Services.AddValidatorsFromAssemblyContaining<Employee>();
-builder.Services.AddValidatorsFromAssemblyContaining<Event>();
-builder.Services.AddValidatorsFromAssemblyContaining<VoteEvent>();
-builder.Services.AddValidatorsFromAssemblyContaining<OfficeAttendance>();
-builder.Services.AddFluentValidationAutoValidation();
-builder.Services.AddFluentValidationClientsideAdapters();
+// builder.Services.AddValidatorsFromAssemblyContaining<RoomBooking>();
+// builder.Services.AddValidatorsFromAssemblyContaining<Room>();
+// builder.Services.AddValidatorsFromAssemblyContaining<Employee>();
+// builder.Services.AddValidatorsFromAssemblyContaining<Event>();
+// builder.Services.AddValidatorsFromAssemblyContaining<VoteEvent>();
+// builder.Services.AddValidatorsFromAssemblyContaining<OfficeAttendance>();
+// builder.Services.AddFluentValidationAutoValidation();
+// builder.Services.AddFluentValidationClientsideAdapters();
 
 // --- Database (SQLite from appsettings.json) ---
 builder.Services.AddDbContext<AppDbContext>(options =>
@@ -160,6 +160,31 @@ try
                     Role = "Employee",
                     Department = "Marketing",
                     Password = BCrypt.Net.BCrypt.HashPassword("password123")
+                }
+            );
+            db.SaveChanges();
+        }
+
+        if (!db.Rooms.Any())
+        {
+            db.Rooms.AddRange(
+                new Room
+                {
+                    RoomName = "The Dungeon",
+                    Capacity = 99,
+                    Location = "Underground Basement"
+                },
+                new Room
+                {
+                    RoomName = "Heaven",
+                    Capacity = 1,
+                    Location = "Upstairs"
+                },
+                new Room
+                {
+                    RoomName = "Quiet Room",
+                    Capacity = 5,
+                    Location = "In the Lab!"
                 }
             );
             db.SaveChanges();

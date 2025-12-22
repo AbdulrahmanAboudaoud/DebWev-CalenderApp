@@ -5,8 +5,7 @@ public interface IRoomService
 {
     IEnumerable<Room> GetAll();
     Room? GetById(int id);
-    Room? GetByName(string name);
-    Room? Add(RoomDtos room);
-    Room? Update(int id, Room room);
+    Room? Create(CreateRoomDto dto);
+    Room? Update(int id, UpdateRoomDto dto);
     bool DeleteById(int id);
 }

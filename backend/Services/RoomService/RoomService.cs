@@ -4,54 +4,59 @@ using backend.DTOs;
 
 public class RoomService : IRoomService
 {
-    private readonly IRepository<Room> _roomRepo;
+    private readonly IRepository<Room> _room;
 
     public RoomService(IRepository<Room> repository)
     {
-        _roomRepo = repository;
+        _room = repository;
     }
 
-    public IEnumerable<Room> GetAll() => _roomRepo.GetAll();
-
-    public Room Add(RoomDtos roomDto)
+    public Room Create(CreateRoomDto roomDto)
     {
+        // Prepares room entity
         var room = new Room
         {
-            RoomName = roomDto.roomName,
-            Capacity = roomDto.capacity,
-            Location = roomDto.location
+            RoomName = roomDto.RoomName,
+            Capacity = roomDto.Capacity,
+            Location = roomDto.Location
         };
 
-        _roomRepo.Add(room);
-        _roomRepo.SaveChanges();
+        // Validates room entity
+        if(_room.GetById(room.RoomId) != null)
+        {
+            throw new Exception("Room with the same ID already exists");
+        }
+
+        _room.Add(room);
+        _room.SaveChanges();
         return room;
     }
 
     public bool DeleteById(int id)
     {
-        var room = _roomRepo.GetById(id);
+        var room = _room.GetById(id);
         if (room == null) return false;
 
-        _roomRepo.Delete(room);
-        _roomRepo.SaveChanges();
+        _room.Delete(room);
+        _room.SaveChanges();
         return true;
     }
 
-    public Room? GetById(int id) => _roomRepo.GetById(id);
+    public IEnumerable<Room> GetAll() => _room.GetAll();
 
-    public Room? GetByName(string name) => _roomRepo.Find(r => r.RoomName == name).FirstOrDefault();
+    public Room? GetById(int id) => _room.GetById(id);
 
-    public Room? Update(int id, Room room)
+    public Room? Update(int id, UpdateRoomDto dto)
     {
-        var existingRoom = _roomRepo.GetById(id);
+        var existingRoom = _room.GetById(id);
         if (existingRoom == null) return null;
 
-        existingRoom.RoomName = room.RoomName;
-        existingRoom.Capacity = room.Capacity;
-        existingRoom.Location = room.Location;
+        existingRoom.RoomName = dto.RoomName;
+        existingRoom.Capacity = dto.Capacity;
+        existingRoom.Location = dto.Location;
 
-        _roomRepo.Update(existingRoom);
-        _roomRepo.SaveChanges();
+        _room.Update(existingRoom);
+        _room.SaveChanges();
         return existingRoom;
     }
 }
