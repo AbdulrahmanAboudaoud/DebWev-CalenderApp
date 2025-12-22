@@ -1,9 +1,12 @@
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace backend.Models;
 
 public class RoomBooking
 {
+    [Key]
+    public int Id { get; set; }
     public int RoomId { get; set; }
     public int UserId { get; set; }
     public DateTime BookingDate { get; set; }

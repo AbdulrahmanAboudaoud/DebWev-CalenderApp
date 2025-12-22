@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Design;
 using backend.Models;
 using backend.Services.EmployeeService;
 using backend.Services.AttendanceService;
@@ -377,7 +378,6 @@ public class AppDbContext : DbContext
     {
         modelBuilder.Entity<EventParticipation>().HasKey(e => new { e.EventId, e.UserId });
         modelBuilder.Entity<GroupMembership>().HasKey(g => new { g.UserId, g.GroupId });
-        modelBuilder.Entity<RoomBooking>().HasKey(r => new { r.RoomId, r.UserId, r.BookingDate });
 
         // one attendance per user per date
         modelBuilder.Entity<OfficeAttendance>().HasIndex(a => new { a.UserId, a.Date }).IsUnique();

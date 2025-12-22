@@ -21,13 +21,20 @@ public class RoomBookingService : IRoomBookingService
             UserId = dto.UserId,
             BookingDate = dto.BookingDate,
             StartTime = dto.StartTime,
-            EndTime = dto.EndTime
+            EndTime = dto.EndTime,
+            Purpose = dto.Purpose
         };
 
-        // Validation
-        if(_repository.GetById(roomBooking.RoomId) != null)
+        // Check for conflicting bookings
+        var conflictingBooking = _repository.Find(rb => 
+            rb.RoomId == roomBooking.RoomId && 
+            rb.BookingDate == roomBooking.BookingDate && 
+            ((rb.StartTime < roomBooking.EndTime && rb.EndTime > roomBooking.StartTime))
+        ).FirstOrDefault();
+
+        if (conflictingBooking != null)
         {
-            throw new Exception("Room booking with the same ID already exists");
+            throw new Exception("Room is already booked for the selected time slot");
         }
         
         _repository.Add(roomBooking);
