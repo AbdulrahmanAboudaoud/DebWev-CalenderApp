@@ -11,6 +11,7 @@ using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using backend.Services.AuthService;
 using BCrypt.Net;
+using backend.Services.RoomBookingService;
 // using FluentValidation;
 // using FluentValidation.AspNetCore;
 

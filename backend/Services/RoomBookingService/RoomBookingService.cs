@@ -6,58 +6,64 @@ namespace backend.Services.RoomBookingService;
 
 public class RoomBookingService : IRoomBookingService
 {
-    private readonly IRepository<RoomBooking> _roomBooking;
+    private readonly IRepository<RoomBooking> _repository;
 
     public RoomBookingService(IRepository<RoomBooking> repository)
     {
-        _roomBooking = repository;
+        _repository = repository;
     }
 
-    public RoomBooking Create(RoomBookingDto roomBookingDto)
+    public RoomBooking Create(CreateRoomBookingDto dto)
     {
         var roomBooking = new RoomBooking
         {
-            RoomId = roomBookingDto._roomId,
-            UserId = roomBookingDto._userId,
-            BookingDate = roomBookingDto._bookingDate,
-            StartTime = roomBookingDto._startTime,
-            EndTime = roomBookingDto._endTime
+            RoomId = dto.RoomId,
+            UserId = dto.UserId,
+            BookingDate = dto.BookingDate,
+            StartTime = dto.StartTime,
+            EndTime = dto.EndTime
         };
 
-        _roomBooking.Add(roomBooking);
-        _roomBooking.SaveChanges();
+        // Validation
+        if(_repository.GetById(roomBooking.RoomId) != null)
+        {
+            throw new Exception("Room booking with the same ID already exists");
+        }
+        
+        _repository.Add(roomBooking);
+        _repository.SaveChanges();
         return roomBooking;
     }
 
-    public IEnumerable<RoomBooking> GetAll() => _roomBooking.GetAll();
+    public IEnumerable<RoomBooking> GetAll() => _repository.GetAll();
 
-    public RoomBooking? GetById(int id) => _roomBooking.GetById(id);
+    public RoomBooking? GetById(int id) => _repository.GetById(id);
 
-    public RoomBooking? GetByUserId(int userId) => _roomBooking.Find(r => r.UserId == userId).FirstOrDefault();
+    public RoomBooking? GetByUserId(int userId) => _repository.Find(r => r.UserId == userId).FirstOrDefault();
 
     public bool DeleteById(int id)
     {
-        var roomBooking = _roomBooking.GetById(id);
+        var roomBooking = _repository.GetById(id);
         if (roomBooking == null) return false;
 
-        _roomBooking.Delete(roomBooking);
-        _roomBooking.SaveChanges();
+        _repository.Delete(roomBooking);
+        _repository.SaveChanges();
         return true;
     }
 
     public bool DeleteByUserId(int userId)
     {
-        var roomBooking = _roomBooking.Find(r => r.UserId == userId).FirstOrDefault();
+        var roomBooking = _repository.Find(r => r.UserId == userId).FirstOrDefault();
         if (roomBooking == null) return false;
 
-        _roomBooking.Delete(roomBooking);
-        _roomBooking.SaveChanges();
+        _repository.Delete(roomBooking);
+        _repository.SaveChanges();
         return true;
     }
 
     public RoomBooking? Update(int id, UpdateRoomBookingDto dto)
     {
-        var existingRoomBooking = _roomBooking.GetById(id);
+        var existingRoomBooking = _repository.GetById(id);
         if (existingRoomBooking == null) return null;
 
         existingRoomBooking.RoomId = dto.RoomId;
@@ -67,8 +73,8 @@ public class RoomBookingService : IRoomBookingService
         existingRoomBooking.EndTime = dto.EndTime;
         existingRoomBooking.Purpose = dto.Purpose;
         
-        _roomBooking.Update(existingRoomBooking);
-        _roomBooking.SaveChanges();
+        _repository.Update(existingRoomBooking);
+        _repository.SaveChanges();
         return existingRoomBooking;
     }
 }

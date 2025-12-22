@@ -1,6 +1,8 @@
 using backend.Models;
 using backend.DTOs;
 
+namespace backend.Services.RoomBookingService;
+
 public interface IRoomBookingService
 {
     IEnumerable<RoomBooking> GetAll();
