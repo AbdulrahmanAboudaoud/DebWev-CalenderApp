@@ -4,6 +4,7 @@ using backend.Services.EmployeeService;
 using backend.Services.AttendanceService;
 using backend.Services.EventService;
 using backend.Services.VoteEventService;
+using backend.Services.RoomService;
 using backend.Repository;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;

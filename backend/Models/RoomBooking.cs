@@ -9,7 +9,7 @@ public class RoomBooking
     public DateTime BookingDate { get; set; }
     public TimeOnly StartTime { get; set; }
     public TimeOnly EndTime { get; set; }
-    public string Purpose { get; set; } = default!;
+    public string? Purpose { get; set; } = default!;
 
     [ForeignKey("UserId")]
     public Employee Employee { get; set; } = default!;

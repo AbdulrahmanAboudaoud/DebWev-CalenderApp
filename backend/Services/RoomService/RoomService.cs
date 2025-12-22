@@ -2,6 +2,8 @@ using backend.Models;
 using backend.Repository;
 using backend.DTOs;
 
+namespace backend.Services.RoomService;
+
 public class RoomService : IRoomService
 {
     private readonly IRepository<Room> _room;

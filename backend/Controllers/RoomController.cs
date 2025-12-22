@@ -1,6 +1,6 @@
 using backend.Models;
 using Microsoft.AspNetCore.Mvc;
-using backend.Services;
+using backend.Services.RoomService;
 using backend.DTOs;
 namespace backend.Controllers;
 

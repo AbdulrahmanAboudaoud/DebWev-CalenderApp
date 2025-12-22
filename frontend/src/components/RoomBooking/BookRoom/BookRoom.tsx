@@ -1,12 +1,35 @@
 import React, { useState } from "react";
 import { NavLink } from "react-router-dom";
 import "./BookRoom.css";
+import { Room } from "../../../types/Room";
+import { RoomApi } from "../../../services/RoomApi";
 
 function BookRoom() {
+  // Variables for rooms
+  const [rooms, setRooms] = useState<Room[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+
+  // Variables for booking rooms
+
+  // Variables for the forms
   const [selectedRoom, setSelectedRoom] = useState("");
   const [bookingDate, setBookingDate] = useState("");
   const [startTime, setStartTime] = useState("");
   const [endTime, setEndTime] = useState("");
+
+  // Function to get rooms
+  async function loadRooms() {
+    try {
+      const data = await RoomApi.getAllRooms();
+      setRooms(data);
+    } catch (error) {
+      console.error("Error fetching rooms:", error);
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  loadRooms();
 
   return (
     <div className="book-room-container">
@@ -23,9 +46,11 @@ function BookRoom() {
           onChange={(e) => setSelectedRoom(e.target.value)}
         >
           <option value="">Select a room</option>
-          <option value="conferenceRoomA">Conference Room A</option>
-          <option value="meetingRoomB">Meeting Room B</option>
-          <option value="executiveLounge">Huddle Space C</option>
+          {rooms.map((room) => (
+            <option key={room.roomId} value={room.roomId}>
+              {room.roomName}
+            </option>
+          ))}
         </select>
         
         <h3 className="form-section-header">Booking Date</h3>

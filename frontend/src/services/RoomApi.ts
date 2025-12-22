@@ -4,7 +4,7 @@ import { Room } from "../types/Room";
 export const RoomApi = {
   // Get all rooms
   async getAllRooms(): Promise<Room[]> {
-    const response = await fetch(`${API_URL}/rooms`);
+    const response = await fetch(`${API_URL}/room`);
     if (!response.ok) {
       throw new Error("Failed to fetch rooms");
     }
@@ -13,7 +13,7 @@ export const RoomApi = {
 
   // Get Room by ID
   async getRoomById(id: number): Promise<Room> {
-    const response = await fetch(`${API_URL}/rooms/${id}`);
+    const response = await fetch(`${API_URL}/room/${id}`);
     if (!response.ok) {
       throw new Error("Room not found");
     }
