@@ -1,5 +1,5 @@
 const API_URL = "http://localhost:5000/api";
-import { RoomBooking } from "../types/RoomBooking";
+import { RoomBooking, CreateRoomBookingDto } from "../types/RoomBooking";
 
 export const RoomBookingApi = {
     // Get all room bookings
@@ -21,7 +21,7 @@ export const RoomBookingApi = {
     },
 
     // Create new Room Booking
-    createRoomBooking: async (bookingDto: RoomBooking): Promise<RoomBooking> => {
+    createRoomBooking: async (bookingDto: CreateRoomBookingDto): Promise<RoomBooking> => {
         const response = await fetch(`${API_URL}/roombooking`, {
             method: "POST",
             headers: {

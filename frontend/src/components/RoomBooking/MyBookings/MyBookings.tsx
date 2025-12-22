@@ -1,24 +1,76 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { NavLink } from "react-router-dom";
 import "./MyBookings.css";
+import { RoomBookingApi } from "../../../services/RoomBookingApi";
+import { RoomApi } from "../../../services/RoomApi";
+import { RoomBooking } from "../../../types/RoomBooking";
+import { Room } from "../../../types/Room";
 
-// Define the type for our bookings
-interface Booking {
-    id: number;
-    name: string;
+// Define the type for our bookings display
+interface BookingDisplay {
+    id: string; // composite key
+    roomName: string;
     date: string;
     startTime: string;
     endTime: string;
+    purpose?: string;
 }
 
-const bookingsData: Booking[] = [
-    { id: 1, name: "Conference Room A", date: "Nov 15, 2023", startTime: "10:00", endTime: "11:00" },
-    { id: 2, name: "Meeting Room B", date: "Nov 16, 2023", startTime: "14:00", endTime: "15:30" },
-    { id: 3, name: "Cuddle Space C", date: "Nov 17, 2023", startTime: "09:30", endTime: "10:00" }
-];
-
 function MyBookings() {
-    const [bookings, setBookings] = useState<Booking[]>(bookingsData);
+    const [bookings, setBookings] = useState<BookingDisplay[]>([]);
+    const [loading, setLoading] = useState<boolean>(true);
+    const [error, setError] = useState<string | null>(null);
+
+    useEffect(() => {
+        async function loadBookings() {
+            try {
+                // Fetch room bookings
+                const roomBookings = await RoomBookingApi.getAllRoomBookings();
+                
+                // Fetch all rooms to get room names
+                const rooms = await RoomApi.getAllRooms();
+                const roomMap = new Map(rooms.map(room => [room.roomId, room.roomName]));
+                
+                // Map bookings to display format
+                const displayBookings: BookingDisplay[] = roomBookings.map(booking => ({
+                    id: `${booking.roomId}-${booking.userId}-${booking.bookingDate}`,
+                    roomName: roomMap.get(booking.roomId) || 'Unknown Room',
+                    date: new Date(booking.bookingDate).toLocaleDateString(),
+                    startTime: booking.startTime.slice(0, 5), // HH:MM
+                    endTime: booking.endTime.slice(0, 5),
+                    purpose: booking.purpose
+                }));
+                
+                setBookings(displayBookings);
+            } catch (err) {
+                console.error('Error loading bookings:', err);
+                setError('Failed to load bookings');
+            } finally {
+                setLoading(false);
+            }
+        }
+        
+        loadBookings();
+    }, []);
+
+    if (loading) {
+        return <div className="booking-container">Loading bookings...</div>;
+    }
+
+    if (error) {
+        return <div className="booking-container">Error: {error}</div>;
+    }
+
+    if (bookings.length === 0) {
+        return (
+            <div className="booking-container">
+                <div className="booking-header">
+                    <h1>My Bookings</h1>
+                    <p>You have no current room bookings.</p>
+                </div>
+            </div>
+        );
+    }
 
     return (
         <div className="booking-container">
@@ -31,10 +83,13 @@ function MyBookings() {
                 {bookings.map((booking) => (
                     <div key={booking.id} className="booking-item">
                         <div className="booking-content">
-                            <h3 className="booking-name">{booking.name}</h3>
+                            <h3 className="booking-name">{booking.roomName}</h3>
                             <p className="booking-details">
                                 {booking.date} • {booking.startTime} - {booking.endTime}
                             </p>
+                            {booking.purpose && (
+                                <p className="booking-purpose">Purpose: {booking.purpose}</p>
+                            )}
 
                             {/* Buttons! */}
                             <div className="booking-actions">
