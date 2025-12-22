@@ -2,7 +2,7 @@ using backend.Models;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using backend.Services;
+using backend.Services.RoomBookingService;
 using backend.DTOs;
 
 namespace backend.Controllers;
@@ -11,45 +11,50 @@ namespace backend.Controllers;
 [Route("api/[controller]")]
 public class RoomBookingController : ControllerBase
 {
-    private readonly IRoomBookingService _roomBookingService;
+    private readonly IRoomBookingService _service;
     
     public RoomBookingController(IRoomBookingService roomBookingService)
     {
-        _roomBookingService = roomBookingService;
+        _service = roomBookingService;
     }
     
     // GET methods
     [HttpGet]
     public async Task<ActionResult<IEnumerable<RoomBooking>>> GetRoomBookings()
     {
-        var allRoomBookings = _roomBookingService.GetAll();
+        var allRoomBookings = _service.GetAll();
         return Ok(allRoomBookings); 
     }
 
     [HttpGet("{id}")]
     public async Task<ActionResult<RoomBooking>> GetRoomBooking(int id)
     {
-        var roomBooking = _roomBookingService.GetById(id);
+        var roomBooking = _service.GetById(id);
         if (roomBooking == null) return NotFound();
         return Ok(roomBooking);
     }
     
     // POST methods
     [HttpPost]
-    public async Task<ActionResult<RoomBooking>> CreateRoomBooking([FromBody] CreateRoomBookingDtos createDto) // creates a new room booking
+    public async Task<ActionResult<RoomBooking>> CreateRoomBooking([FromBody] CreateRoomBookingDto dto) // creates a new room booking
     {
-        var dto = new RoomBookingDtos(createDto.RoomId, createDto.UserId, createDto.BookingDate, createDto.StartTime, createDto.EndTime, createDto.Purpose);
-        
-        var created = _roomBookingService.Add(dto);
-        
-        return CreatedAtAction(nameof(GetRoomBooking), new { id = created.RoomId }, created);
+        try 
+        {
+            var createdRoomBooking = _service.Create(dto);
+            return CreatedAtAction(nameof(GetRoomBooking), new { id = createdRoomBooking.RoomId }, createdRoomBooking);
+        }
+        catch(Exception ex)
+        {
+            return BadRequest(ex.Message);
+        }
     }
+    
 
     // PUT methods
     [HttpPut("{id}")]
-    public async Task<IActionResult> UpdateRoomBooking(int id, [FromBody] RoomBooking roomBooking)
+    public async Task<IActionResult> UpdateRoomBooking(int id, [FromBody] UpdateRoomBookingDto dto)
     {
-        var updated = _roomBookingService.Update(id, roomBooking);
+        var updated = _service.Update(id, dto);
         if (updated == null) return NotFound();
         return Ok(updated);
     }
@@ -58,7 +63,7 @@ public class RoomBookingController : ControllerBase
     [HttpDelete("{id}")]
     public async Task<IActionResult> DeleteRoomBooking(int id)
     {
-        var success = _roomBookingService.DeleteById(id);
+        var success = _service.DeleteById(id);
         if (!success) return NotFound();
         return Ok();
     }
