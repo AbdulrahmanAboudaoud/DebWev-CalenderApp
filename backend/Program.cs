@@ -109,8 +109,8 @@ try
     {
         var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
 
-        // Ensure schema is applied to the DB file that the app is actually using
-        db.Database.Migrate();
+        // Gotta create that db am I right fellas
+        db.Database.EnsureCreated(); 
 
         // ONE-TIME: hash existing plain-text passwords (keeps your old DB)
         var employees = db.Employees.ToList();
@@ -168,6 +168,9 @@ try
             db.SaveChanges();
         }
 
+
+
+        // Seed Rooms (only if empty)
         if (!db.Rooms.Any())
         {
             db.Rooms.AddRange(
@@ -193,6 +196,30 @@ try
             db.SaveChanges();
         }
 
+        if (!db.RoomBookings.Any())
+        {
+            db.RoomBookings.AddRange(
+                new RoomBooking
+                {
+                    RoomId = 1,
+                    UserId = 2,
+                    StartTime = TimeOnly.FromDateTime(DateTime.Now.AddHours(1)),
+                    EndTime = TimeOnly.FromDateTime(DateTime.Now.AddHours(2)),
+                    Purpose = "Team Meeting"
+                },
+                new RoomBooking
+                {
+                    RoomId = 2,
+                    UserId = 3,
+                    StartTime = TimeOnly.FromDateTime(DateTime.Now.AddHours(4)),
+                    EndTime = TimeOnly.FromDateTime(DateTime.Now.AddHours(5)),
+                    Purpose = "Client Presentation"
+                }
+            );
+            db.SaveChanges();
+        }
+
+        // Seed Events & VoteEvents (only if empty)
         if (!db.Events.Any())
         {
             db.Events.AddRange(
@@ -371,8 +398,6 @@ public class AppDbContext : DbContext
     public DbSet<OfficeAttendance> OfficeAttendances => Set<OfficeAttendance>();
     public DbSet<Room> Rooms => Set<Room>();
     public DbSet<RoomBooking> RoomBookings => Set<RoomBooking>();
-    public DbSet<Group> Groups => Set<Group>();
-    public DbSet<GroupMembership> GroupMemberships => Set<GroupMembership>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

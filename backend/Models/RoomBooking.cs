@@ -6,7 +6,7 @@ namespace backend.Models;
 public class RoomBooking
 {
     [Key]
-    public int Id { get; set; }
+    public int RoomBookingId { get; set; }
     public int RoomId { get; set; }
     public int UserId { get; set; }
     public DateTime BookingDate { get; set; }

@@ -33,7 +33,7 @@ Steps
    dotnet run
    ```
 
-By default the API runs on http://localhost:5000 — open http://localhost:5000/swagger to explore endpoints.
+By default, the API runs on http://localhost:5000 — open http://localhost:5000/swagger to explore endpoints.
 
 Quick tips
 - To change the URL: `dotnet run --urls "http://localhost:5001"`
@@ -42,4 +42,4 @@ Quick tips
   set ConnectionStrings__DefaultConnection="Data Source=Data/app.db"
   ```
 
-That's it — enjoy! :D
+That's it!

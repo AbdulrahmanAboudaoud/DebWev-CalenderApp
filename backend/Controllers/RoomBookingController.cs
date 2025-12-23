@@ -41,7 +41,7 @@ public class RoomBookingController : ControllerBase
         try 
         {
             var createdRoomBooking = _service.Create(dto);
-            return CreatedAtAction(nameof(GetRoomBooking), new { id = createdRoomBooking.RoomId }, createdRoomBooking);
+            return CreatedAtAction(nameof(GetRoomBooking), new { id = createdRoomBooking.RoomBookingId }, createdRoomBooking);
         }
         catch(Exception ex)
         {

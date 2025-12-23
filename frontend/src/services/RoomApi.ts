@@ -22,6 +22,9 @@ export const RoomApi = {
 
   // Create new Room
   createRoom: async (roomDto: Room): Promise<Room> => {
+    if (localStorage["user"]["role"] !== "Admin") {
+      throw new Error("Unauthorized: Only Admins can create rooms");
+    }
     const response = await fetch(`${API_URL}/room`, {
       method: "POST",
       headers: {
@@ -38,6 +41,9 @@ export const RoomApi = {
 
   // Update existing room
   updateRoom: async (id: number, roomDto: Room): Promise<Room> => {
+      if (localStorage["user"]["role"] !== "Admin") {
+        throw new Error("Unauthorized: Only Admins can update rooms");
+    }
     const response = await fetch(`${API_URL}/room/${id}`, {
       method: "PUT",
       headers: {
@@ -54,6 +60,9 @@ export const RoomApi = {
 
   // Delete room
   deleteRoom: async (id: number): Promise<void> => {
+      if (localStorage["user"]["role"] !== "Admin") {
+        throw new Error("Unauthorized: Only Admins can delete rooms");
+    }
     const response = await fetch(`${API_URL}/room/${id}`, {
       method: "DELETE",
     });

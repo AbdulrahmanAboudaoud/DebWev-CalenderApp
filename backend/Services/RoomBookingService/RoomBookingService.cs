@@ -28,9 +28,9 @@ public class RoomBookingService : IRoomBookingService
         // Check for conflicting bookings
         var conflictingBooking = _repository.Find(rb => 
             rb.RoomId == roomBooking.RoomId && 
-            rb.BookingDate == roomBooking.BookingDate && 
-            ((rb.StartTime < roomBooking.EndTime && rb.EndTime > roomBooking.StartTime))
-        ).FirstOrDefault();
+            rb.BookingDate == roomBooking.BookingDate
+        ).AsEnumerable()
+            .FirstOrDefault(rb => rb.StartTime < roomBooking.EndTime && rb.EndTime > roomBooking.StartTime);
 
         if (conflictingBooking != null)
         {
