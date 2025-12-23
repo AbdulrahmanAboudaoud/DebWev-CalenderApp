@@ -18,7 +18,7 @@ import Login from "./pages/Login/Login";
 import Home from "./pages/user/Home/Home";
 import Events from "./pages/user/Events/Events";
 import EventDetail from "./pages/user/Events/EventDetail";
-import RoomBooking from "./pages/user/Rooms/RoomBooking";
+import RoomBooking from "./pages/user/RoomBooking/RoomBooking";
 import TestPage from "./pages/test_page/TestPage";
 
 // Admin pages
@@ -61,6 +61,7 @@ root.render(
           <Route path="events/:eventId" element={<AdminEventDetail />} />
           <Route path="room-booking" element={<AdminRoomBooking />} />
           <Route path="users" element={<Users />} />
+          <Route path="testpage" element={<TestPage />} />
         </Route>
 
         {/* 404 */}

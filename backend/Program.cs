@@ -1,17 +1,33 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Design;
 using backend.Models;
 using backend.Services.EmployeeService;
 using backend.Services.AttendanceService;
 using backend.Services.EventService;
 using backend.Services.VoteEventService;
+using backend.Services.RoomService;
 using backend.Repository;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using backend.Services.AuthService;
 using BCrypt.Net;
+using backend.Services.RoomBookingService;
+// using FluentValidation;
+// using FluentValidation.AspNetCore;
 
 var builder = WebApplication.CreateBuilder(args);
+
+// Adds validation!!
+// When adding a new model / validation, please add it here too!
+// builder.Services.AddValidatorsFromAssemblyContaining<RoomBooking>();
+// builder.Services.AddValidatorsFromAssemblyContaining<Room>();
+// builder.Services.AddValidatorsFromAssemblyContaining<Employee>();
+// builder.Services.AddValidatorsFromAssemblyContaining<Event>();
+// builder.Services.AddValidatorsFromAssemblyContaining<VoteEvent>();
+// builder.Services.AddValidatorsFromAssemblyContaining<OfficeAttendance>();
+// builder.Services.AddFluentValidationAutoValidation();
+// builder.Services.AddFluentValidationClientsideAdapters();
 
 // --- Database (SQLite from appsettings.json) ---
 builder.Services.AddDbContext<AppDbContext>(options =>
@@ -30,6 +46,8 @@ builder.Services.AddScoped<IEventService, EventService>();
 builder.Services.AddScoped<IVoteEventService, VoteEventService>();
 builder.Services.AddScoped<IAttendanceService, AttendanceService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
+builder.Services.AddScoped<IRoomService, RoomService>();
+builder.Services.AddScoped<IRoomBookingService, RoomBookingService>();
 
 // Register generic repository for DI (used by services/repositories)
 builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
@@ -91,8 +109,8 @@ try
     {
         var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
 
-        // Ensure schema is applied to the DB file that the app is actually using
-        db.Database.Migrate();
+        // Gotta create that db am I right fellas
+        db.Database.EnsureCreated(); 
 
         // ONE-TIME: hash existing plain-text passwords (keeps your old DB)
         var employees = db.Employees.ToList();
@@ -150,6 +168,58 @@ try
             db.SaveChanges();
         }
 
+
+
+        // Seed Rooms (only if empty)
+        if (!db.Rooms.Any())
+        {
+            db.Rooms.AddRange(
+                new Room
+                {
+                    RoomName = "The Dungeon",
+                    Capacity = 99,
+                    Location = "Underground Basement"
+                },
+                new Room
+                {
+                    RoomName = "Heaven",
+                    Capacity = 1,
+                    Location = "Upstairs"
+                },
+                new Room
+                {
+                    RoomName = "Quiet Room",
+                    Capacity = 5,
+                    Location = "In the Lab!"
+                }
+            );
+            db.SaveChanges();
+        }
+
+        if (!db.RoomBookings.Any())
+        {
+            db.RoomBookings.AddRange(
+                new RoomBooking
+                {
+                    RoomId = 1,
+                    UserId = 2,
+                    StartTime = TimeOnly.FromDateTime(DateTime.Now.AddHours(1)),
+                    EndTime = TimeOnly.FromDateTime(DateTime.Now.AddHours(2)),
+                    Purpose = "Team Meeting"
+                },
+                new RoomBooking
+                {
+                    RoomId = 2,
+                    UserId = 3,
+                    StartTime = TimeOnly.FromDateTime(DateTime.Now.AddHours(4)),
+                    EndTime = TimeOnly.FromDateTime(DateTime.Now.AddHours(5)),
+                    Purpose = "Client Presentation"
+                }
+            );
+            db.SaveChanges();
+        }
+
+        // Seed Events & VoteEvents (only if empty)
         if (!db.Events.Any())
         {
             db.Events.AddRange(
@@ -328,14 +398,11 @@ public class AppDbContext : DbContext
     public DbSet<OfficeAttendance> OfficeAttendances => Set<OfficeAttendance>();
     public DbSet<Room> Rooms => Set<Room>();
     public DbSet<RoomBooking> RoomBookings => Set<RoomBooking>();
-    public DbSet<Group> Groups => Set<Group>();
-    public DbSet<GroupMembership> GroupMemberships => Set<GroupMembership>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<EventParticipation>().HasKey(e => new { e.EventId, e.UserId });
         modelBuilder.Entity<GroupMembership>().HasKey(g => new { g.UserId, g.GroupId });
-        modelBuilder.Entity<RoomBooking>().HasKey(r => new { r.RoomId, r.UserId, r.BookingDate });
 
         // one attendance per user per date
         modelBuilder.Entity<OfficeAttendance>().HasIndex(a => new { a.UserId, a.Date }).IsUnique();

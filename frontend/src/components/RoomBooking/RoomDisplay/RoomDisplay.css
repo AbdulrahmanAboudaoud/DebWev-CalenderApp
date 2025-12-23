@@ -28,6 +28,7 @@
     display: flex;
     flex-direction: column;
     gap: 1.5rem;
+    width: 100%;
 }
 
 .room-card {
@@ -49,10 +50,9 @@
     font-weight: bold;
 }
 
-.room-features {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.5rem;
+.room-location {
+    color: #666;
+    margin: 0 0 1rem 0;
 }
 
 .feature-tag {

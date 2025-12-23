@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace backend.Migrations
 {
-    [DbContext(typeof(AppDbContext))]
+    [DbContext(typeof(IRoomService))]
     [Migration("20251113114551_FixAllForeignKeys")]
     partial class FixAllForeignKeys
     {

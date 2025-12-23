@@ -1,59 +1,46 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { NavLink } from "react-router-dom";
 import "./RoomDisplay.css";
+import { RoomApi } from "../../../services/RoomApi";
+import { Room } from "../../../types/Room";
 
-// Define the type for our bookings
-interface Room {
-  id: number;
-  name: string;
-  capacity: number;
-  features: string[];
-}
+  function Rooms() {
+    const [rooms, setRooms] = useState<Room[]>([]);
+    const [loading, setLoading] = useState<boolean>(true);
 
-const roomData: Room[] = [
-  {
-    id: 1,
-    name: "Conference Room A",
-    capacity: 4,
-    features: ["Coffee Machine", "Presentation Monitor"],
-  },
-  {
-    id: 2,
-    name: "Meeting Room B",
-    capacity: 20,
-    features: ["Dual Projectors", "Sound System", "Flexible Seating"],
-  },
-  {
-    id: 3,
-    name: "Cuddle Space C",
-    capacity: 2,
-    features: ["Soundproof", "Comfort Seating"],
-  },
-];
+    useEffect(() => {
+      async function loadRooms() {
+        try {
+          const data = await RoomApi.getAllRooms();
+          setRooms(data);
+        } catch (error) {
+          console.error("Error fetching rooms:", error);
+        } finally {
+          setLoading(false);
+        }
+      }
 
-function Rooms() {
-  return (
-    <div className="rooms-container">
-      <div className="rooms-header">
-        <h1>Available Rooms</h1>
-        <p>Browse and select from our premium spaces</p>
-      </div>
+      loadRooms();
+    })
+    
+    return (
+      <div className="rooms-container">
+        <div className="rooms-header">
+          <h1>Available Rooms</h1>
+          <p>Browse and select from our premium spaces</p>
+        </div>
 
-      <div className="rooms-list">
-        {roomData.map((room) => (
-          <div key={room.id} className="room-card">
-            <h2 className="room-name">{room.name}</h2>
-            <p className="room-capacity">Capacity: {room.capacity} people</p>
-            <div className="room-features">
-              {room.features.map((feature, index) => (
-                <span key={index} className="feature-tag">{feature}</span>
-              ))}
+        <div className="rooms-list">
+          {rooms.map((room) => (
+            <div key={room.roomId} className="room-card">
+              <h2 className="room-name">{room.roomName}</h2>
+              <p className="room-capacity">Capacity: {room.capacity} people</p>
+              <p className="room-location">Location: {room.location}</p>
             </div>
-          </div>
-        ))}
+          ))}
+        </div>
       </div>
-    </div>
-  );
-}
+    );
+  }
 
-export default Rooms;
+  export default Rooms;
