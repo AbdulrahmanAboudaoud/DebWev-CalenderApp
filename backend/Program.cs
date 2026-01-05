@@ -13,6 +13,8 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using backend.Services.AuthService;
 using BCrypt.Net;
 using backend.Services.RoomBookingService;
+using Microsoft.AspNetCore.Authorization;
+
 // using FluentValidation;
 // using FluentValidation.AspNetCore;
 
@@ -90,7 +92,14 @@ builder.Services
 // Adds Authorization policies, later to be used in Controllers
 builder.Services.AddAuthorization(options =>
 {
-    options.AddPolicy("RequireAdminRole", policy => policy.RequireRole("Admin"));
+    // Require authentication for ALL endpoints by default
+    options.FallbackPolicy = new AuthorizationPolicyBuilder()
+        .RequireAuthenticatedUser()
+        .Build();
+
+    // Admin-only policy
+    options.AddPolicy("RequireAdminRole", policy =>
+        policy.RequireRole("Admin"));
 });
 
 // Swagger - MUST be here, before builder.Build()

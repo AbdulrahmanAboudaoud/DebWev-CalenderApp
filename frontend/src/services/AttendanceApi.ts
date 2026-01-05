@@ -1,6 +1,11 @@
-const API_URL = "http://localhost:5000/api";
+import { API_URL, getAuthHeaders } from "./apiConfig";
 
-export type StatusValue = "office" | "home" | "sick" | "vacation" | "offline";
+export type StatusValue =
+    | "office"
+    | "home"
+    | "sick"
+    | "vacation"
+    | "offline";
 
 export type AttendanceOverviewItem = {
     attendanceId: number;
@@ -9,18 +14,6 @@ export type AttendanceOverviewItem = {
     role: string;
     status: StatusValue;
     lastUpdatedAt: string;
-};
-
-const getAuthHeaders = (): Record<string, string> => {
-    const token = localStorage.getItem("token");
-
-    if (!token) {
-        return {};
-    }
-
-    return {
-        Authorization: `Bearer ${token}`,
-    };
 };
 
 export const attendanceApi = {
@@ -43,7 +36,7 @@ export const attendanceApi = {
         }
     },
 
-    // GET: today's attendance overview (for admin page)
+    // GET: today's attendance overview (admin)
     getTodayAttendance: async (): Promise<AttendanceOverviewItem[]> => {
         const response = await fetch(`${API_URL}/Attendance/today`, {
             headers: {

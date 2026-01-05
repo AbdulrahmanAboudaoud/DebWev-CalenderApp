@@ -1,5 +1,4 @@
-const API_URL = "http://localhost:5000/api";
-
+import { API_URL } from "./apiConfig";
 import { LoginRequest, LoginResponse } from "../types/Auth";
 
 export const authApi = {

@@ -1,4 +1,4 @@
-const API_URL = 'http://localhost:5000/api';
+import { API_URL, getAuthHeaders } from "./apiConfig";
 
 export interface VoteEvent {
   voteEventId: number;
@@ -14,30 +14,35 @@ export interface VoteEvent {
 export const VoteEventApi = {
   // Get all vote events
   getAllVoteEvents: async (): Promise<VoteEvent[]> => {
-    const response = await fetch(`${API_URL}/voteevents`);
-    if (!response.ok) {
-      throw new Error('Failed to fetch vote events');
-    }
+    const response = await fetch(`${API_URL}/voteevents`, {
+      headers: {
+        ...getAuthHeaders(),
+      },
+    });
+    if (!response.ok) throw new Error(await response.text());
     return response.json();
   },
 
   // Get single vote event by ID
   getVoteEventById: async (id: number): Promise<VoteEvent> => {
-    const response = await fetch(`${API_URL}/voteevents/${id}`);
-    if (!response.ok) {
-      throw new Error('Failed to fetch vote event');
-    }
+    const response = await fetch(`${API_URL}/voteevents/${id}`, {
+      headers: {
+        ...getAuthHeaders(),
+      },
+    });
+    if (!response.ok) throw new Error(await response.text());
     return response.json();
   },
 
   // Vote for an event
   voteForEvent: async (id: number): Promise<VoteEvent> => {
     const response = await fetch(`${API_URL}/voteevents/${id}/vote`, {
-      method: 'POST',
+      method: "POST",
+      headers: {
+        ...getAuthHeaders(),
+      },
     });
-    if (!response.ok) {
-      throw new Error('Failed to vote for event');
-    }
+    if (!response.ok) throw new Error(await response.text());
     return response.json();
   },
 };
