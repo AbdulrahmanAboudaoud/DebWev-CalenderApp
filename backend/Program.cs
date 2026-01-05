@@ -14,8 +14,8 @@ using backend.Services.AuthService;
 using BCrypt.Net;
 using backend.Services.RoomBookingService;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.OpenApi.Models;
-
+// using Microsoft.OpenApi.Models;
+using Swashbuckle.AspNetCore.SwaggerGen;
 // using FluentValidation;
 // using FluentValidation.AspNetCore;
 
@@ -110,30 +110,30 @@ builder.Services.AddEndpointsApiExplorer();
 // Swagger config with JWT Bearer support (shows Authorize input)
 builder.Services.AddSwaggerGen(options =>
 {
-    options.SwaggerDoc("v1", new OpenApiInfo
+    options.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo 
     {
         Title = "Calendar App API",
         Version = "v1"
     });
 
-    options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+    options.AddSecurityDefinition("Bearer", new Microsoft.OpenApi.Models.OpenApiSecurityScheme
     {
         Name = "Authorization",
-        Type = SecuritySchemeType.Http,
+        Type = Microsoft.OpenApi.Models.SecuritySchemeType.Http,
         Scheme = "Bearer",
         BearerFormat = "JWT",
-        In = ParameterLocation.Header,
+        In = Microsoft.OpenApi.Models.ParameterLocation.Header,
         Description = "Enter: Bearer <your JWT token>"
     });
 
-    options.AddSecurityRequirement(new OpenApiSecurityRequirement
+    options.AddSecurityRequirement(new Microsoft.OpenApi.Models.OpenApiSecurityRequirement
     {
         {
-            new OpenApiSecurityScheme
+            new Microsoft.OpenApi.Models.OpenApiSecurityScheme
             {
-                Reference = new OpenApiReference
+                Reference = new Microsoft.OpenApi.Models.OpenApiReference
                 {
-                    Type = ReferenceType.SecurityScheme,
+                    Type = Microsoft.OpenApi.Models.ReferenceType.SecurityScheme,
                     Id = "Bearer"
                 }
             },
