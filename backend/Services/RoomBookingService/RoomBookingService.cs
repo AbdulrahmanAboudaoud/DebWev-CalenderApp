@@ -13,12 +13,12 @@ public class RoomBookingService : IRoomBookingService
         _repository = repository;
     }
 
-    public RoomBooking Create(CreateRoomBookingDto dto)
+    public RoomBooking Create(CreateRoomBookingDto dto, int userId)
     {
         var roomBooking = new RoomBooking
         {
             RoomId = dto.RoomId,
-            UserId = dto.UserId,
+            UserId = userId,
             BookingDate = dto.BookingDate,
             StartTime = dto.StartTime,
             EndTime = dto.EndTime,
@@ -26,8 +26,8 @@ public class RoomBookingService : IRoomBookingService
         };
 
         // Check for conflicting bookings
-        var conflictingBooking = _repository.Find(rb => 
-            rb.RoomId == roomBooking.RoomId && 
+        var conflictingBooking = _repository.Find(rb =>
+            rb.RoomId == roomBooking.RoomId &&
             rb.BookingDate == roomBooking.BookingDate
         ).AsEnumerable()
             .FirstOrDefault(rb => rb.StartTime < roomBooking.EndTime && rb.EndTime > roomBooking.StartTime);
@@ -36,7 +36,7 @@ public class RoomBookingService : IRoomBookingService
         {
             throw new Exception("Room is already booked for the selected time slot");
         }
-        
+
         _repository.Add(roomBooking);
         _repository.SaveChanges();
         return roomBooking;
@@ -46,16 +46,24 @@ public class RoomBookingService : IRoomBookingService
 
     public RoomBooking? GetById(int id) => _repository.GetById(id);
 
-    public RoomBooking? GetByUserId(int userId) => _repository.Find(r => r.UserId == userId).FirstOrDefault();
+    public IEnumerable<RoomBooking> GetByUserId(int userId) => _repository.Find(r => r.UserId == userId).ToList();
 
     public bool DeleteById(int id)
     {
-        var roomBooking = _repository.GetById(id);
-        if (roomBooking == null) return false;
+        try
+        {
+            var roomBooking = _repository.GetById(id);
+            if (roomBooking == null) return false;
 
-        _repository.Delete(roomBooking);
-        _repository.SaveChanges();
-        return true;
+            _repository.Delete(roomBooking);
+            _repository.SaveChanges();
+            return true;
+        }
+        catch (Exception ex)
+        {
+            throw new Exception("Failed to delete booking", ex);
+        }
+
     }
 
     public bool DeleteByUserId(int userId)
@@ -79,7 +87,7 @@ public class RoomBookingService : IRoomBookingService
         existingRoomBooking.StartTime = dto.StartTime;
         existingRoomBooking.EndTime = dto.EndTime;
         existingRoomBooking.Purpose = dto.Purpose;
-        
+
         _repository.Update(existingRoomBooking);
         _repository.SaveChanges();
         return existingRoomBooking;

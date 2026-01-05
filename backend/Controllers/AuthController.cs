@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using backend.Dtos;
 using backend.Services.AuthService;
+using System.Security.Claims;
 
 namespace backend.Controllers;
 
@@ -23,5 +24,23 @@ public class AuthController : ControllerBase
         var result = _authService.Login(request);
         if (result == null) return Unauthorized("Invalid email or password");
         return Ok(result);
+    }
+
+    [HttpGet("debug")]
+    [Authorize]
+    public IActionResult DebugToken()
+    {
+        var claims = User.Claims.Select(c => new
+        {
+            Type = c.Type,
+            Value = c.Value
+        }).ToList();
+
+        return Ok(new
+        {
+            Message = "Current user claims",
+            Claims = claims,
+            UserIdFromToken = User.FindFirst(ClaimTypes.NameIdentifier)?.Value
+        });
     }
 }

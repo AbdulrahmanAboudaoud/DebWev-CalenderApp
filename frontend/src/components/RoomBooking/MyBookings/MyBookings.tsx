@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from "react";
-import { NavLink } from "react-router-dom";
 import "./MyBookings.css";
 import { RoomBookingApi } from "../../../services/RoomBookingApi";
 import { RoomApi } from "../../../services/RoomApi";
-import { RoomBooking } from "../../../types/RoomBooking";
-import { Room } from "../../../types/Room";
+
+interface MyBookingsProps {
+    refreshTrigger?: number; // to trigger refresh when parent notifies
+}
 
 // Define the type for our bookings display
 interface BookingDisplay {
@@ -14,44 +15,56 @@ interface BookingDisplay {
     startTime: string;
     endTime: string;
     purpose?: string;
+    roomBookingId: number;
 }
 
-function MyBookings() {
+
+
+function MyBookings({ refreshTrigger = 0 }: MyBookingsProps) {
     const [bookings, setBookings] = useState<BookingDisplay[]>([]);
     const [loading, setLoading] = useState<boolean>(true);
     const [error, setError] = useState<string | null>(null);
 
-    useEffect(() => {
-        async function loadBookings() {
-            try {
-                // Fetch room bookings
-                const roomBookings = await RoomBookingApi.getAllRoomBookings();
-                
-                // Fetch all rooms to get room names
-                const rooms = await RoomApi.getAllRooms();
-                const roomMap = new Map(rooms.map(room => [room.roomId, room.roomName]));
-                
-                // Map bookings to display format
-                const displayBookings: BookingDisplay[] = roomBookings.map(booking => ({
-                    id: `${booking.roomId}-${booking.userId}-${booking.bookingDate}`,
-                    roomName: roomMap.get(booking.roomId) || 'Unknown Room',
-                    date: new Date(booking.bookingDate).toLocaleDateString(),
-                    startTime: booking.startTime.slice(0, 5), // HH:MM
-                    endTime: booking.endTime.slice(0, 5),
-                    purpose: booking.purpose
-                }));
-                
-                setBookings(displayBookings);
-            } catch (err) {
-                console.error('Error loading bookings:', err);
-                setError('Failed to load bookings');
-            } finally {
-                setLoading(false);
-            }
+    const loadBookings = async () => {
+        try {
+            setLoading(true);
+            setError(null);
+
+            const roomBookings = await RoomBookingApi.getMyBookings();
+            const rooms = await RoomApi.getAllRooms();
+
+            const roomMap = new Map(rooms.map(room => [room.roomId, room.roomName]));
+
+            const displayBookings: BookingDisplay[] = roomBookings.map(booking => ({
+                id: `${booking.roomId}-${booking.userId}-${booking.bookingDate}`,
+                roomName: roomMap.get(booking.roomId) || 'Unknown Room',
+                date: new Date(booking.bookingDate).toLocaleDateString(),
+                startTime: booking.startTime.slice(0, 5), // HH:MM
+                endTime: booking.endTime.slice(0, 5),
+                purpose: booking.purpose,
+                roomBookingId: booking.roomBookingId,
+            }));
+
+            setBookings(displayBookings);
+        } catch (err) {
+            console.error('Error loading bookings:', err);
+            setError('Failed to load bookings');
+        } finally {
+            setLoading(false);
         }
-        
+    };
+
+    // Helps formatting the time
+    const formatTime = (timeString: string): string => {
+        if (timeString.includes(':')) {
+            return timeString.slice(0, 5);
+        }
+        return timeString;
+    };
+
+    useEffect(() => {
         loadBookings();
-    }, []);
+    }, [refreshTrigger]);
 
     if (loading) {
         return <div className="booking-container">Loading bookings...</div>;
@@ -71,6 +84,21 @@ function MyBookings() {
             </div>
         );
     }
+
+    // This will handle the delete room booking
+    const handleDelete = async (bookingId: number) => {
+        if (window.confirm("Are you sure you want to delete this booking?")) {
+            try {
+                await RoomBookingApi.deleteRoomBooking(bookingId);
+                await loadBookings();
+                alert('Booking deleted successfully!');
+            } catch (error) {
+                console.error('Error deleting booking:', error);
+                alert('Failed to delete booking');
+            }
+        }
+        await loadBookings();
+    };
 
     return (
         <div className="booking-container">
@@ -100,6 +128,7 @@ function MyBookings() {
                                 </button>
                                 <button
                                     className="delete-button"
+                                    onClick={() => handleDelete(booking.roomBookingId)}
                                 >
                                     Delete
                                 </button>

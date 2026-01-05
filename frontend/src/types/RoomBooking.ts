@@ -1,4 +1,5 @@
 export interface RoomBooking {
+    roomBookingId: number;
     roomId: number;
     userId: number;
     bookingDate: string; // Date string from API
@@ -9,7 +10,6 @@ export interface RoomBooking {
 
 export interface CreateRoomBookingDto {
     roomId: number;
-    userId: number;
     bookingDate: string; // ISO date string
     startTime: string; // Time string like "10:00:00"
     endTime: string; // Time string like "11:00:00"
