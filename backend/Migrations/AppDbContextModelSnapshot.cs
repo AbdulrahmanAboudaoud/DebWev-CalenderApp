@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace backend.Migrations
 {
-    [DbContext(typeof(IRoomService))]
+    [DbContext(typeof(AppDbContext))]
     partial class AppDbContextModelSnapshot : ModelSnapshot
     {
         protected override void BuildModel(ModelBuilder modelBuilder)
@@ -116,7 +116,7 @@ namespace backend.Migrations
 
                     b.HasKey("GroupId");
 
-                    b.ToTable("Groups");
+                    b.ToTable("Group");
                 });
 
             modelBuilder.Entity("backend.Models.GroupMembership", b =>
@@ -131,7 +131,7 @@ namespace backend.Migrations
 
                     b.HasIndex("GroupId");
 
-                    b.ToTable("GroupMemberships");
+                    b.ToTable("GroupMembership");
                 });
 
             modelBuilder.Entity("backend.Models.OfficeAttendance", b =>
@@ -162,6 +162,31 @@ namespace backend.Migrations
                     b.ToTable("OfficeAttendances");
                 });
 
+            modelBuilder.Entity("backend.Models.RequestLog", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Method")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Path")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("StatusCode")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTime>("Timestamp")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("RequestLogs");
+                });
+
             modelBuilder.Entity("backend.Models.Room", b =>
                 {
                     b.Property<int>("RoomId")
@@ -186,10 +211,8 @@ namespace backend.Migrations
 
             modelBuilder.Entity("backend.Models.RoomBooking", b =>
                 {
-                    b.Property<int>("RoomId")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int>("UserId")
+                    b.Property<int>("RoomBookingId")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
                     b.Property<DateTime>("BookingDate")
@@ -199,13 +222,20 @@ namespace backend.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Purpose")
-                        .IsRequired()
                         .HasColumnType("TEXT");
+
+                    b.Property<int>("RoomId")
+                        .HasColumnType("INTEGER");
 
                     b.Property<TimeOnly>("StartTime")
                         .HasColumnType("TEXT");
 
-                    b.HasKey("RoomId", "UserId", "BookingDate");
+                    b.Property<int>("UserId")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("RoomBookingId");
+
+                    b.HasIndex("RoomId");
 
                     b.HasIndex("UserId");
 

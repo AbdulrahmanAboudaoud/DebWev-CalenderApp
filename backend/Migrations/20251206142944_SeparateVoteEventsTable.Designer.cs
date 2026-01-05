@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace backend.Migrations
 {
-    [DbContext(typeof(IRoomService))]
+    [DbContext(typeof(AppDbContext))]
     [Migration("20251206142944_SeparateVoteEventsTable")]
     partial class SeparateVoteEventsTable
     {
