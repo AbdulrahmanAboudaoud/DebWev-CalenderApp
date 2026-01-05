@@ -13,6 +13,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using backend.Services.AuthService;
 using BCrypt.Net;
 using backend.Services.RoomBookingService;
+using backend.Middleware;
 using Microsoft.AspNetCore.Authorization;
 // using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;
@@ -426,6 +427,9 @@ catch (Exception e)
 app.UseSwagger();
 app.UseSwaggerUI();
 
+// logging middleware 
+app.UseMiddleware<LoggingMiddleware>();
+
 app.UseCors("ReactApp");
 app.UseAuthentication();
 app.UseAuthorization();
@@ -447,6 +451,7 @@ public class AppDbContext : DbContext
     public DbSet<OfficeAttendance> OfficeAttendances => Set<OfficeAttendance>();
     public DbSet<Room> Rooms => Set<Room>();
     public DbSet<RoomBooking> RoomBookings => Set<RoomBooking>();
+    public DbSet<RequestLog> RequestLogs => Set<RequestLog>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

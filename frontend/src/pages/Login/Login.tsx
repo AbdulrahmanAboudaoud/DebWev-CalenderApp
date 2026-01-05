@@ -28,7 +28,7 @@ function Login() {
 
       // Navigate based on role
       if (result.role === "Admin") {
-        navigate("/app/attendance");
+        navigate("/app/home");
       } else {
         navigate("/app/home");
       }

@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import logo from "../../assets/cute-calendar-sticker-free-png-4225752480.png";
 import "./NavBarStyle.css";
 import notification from "../../assets/notification.png";
 import { useNavigate } from "react-router-dom";
@@ -17,6 +16,10 @@ function NavbarRightSide() {
   const navigate = useNavigate();
   const [status, setStatus] = useState<StatusValue>("office");
 
+  // ✅ Get logged-in user from localStorage
+  const user = localStorage.getItem("user");
+  const userName = user ? JSON.parse(user).name : "User";
+
   const currentStatus =
     STATUS_OPTIONS.find((s) => s.value === status) ?? STATUS_OPTIONS[0];
 
@@ -32,20 +35,17 @@ function NavbarRightSide() {
     const newStatus = e.target.value as StatusValue;
     setStatus(newStatus);
 
-    console.log("Changing status to:", newStatus);
-
     try {
       await attendanceApi.updateMyStatus(newStatus);
-      console.log("Status updated successfully");
     } catch (err) {
       console.error("Error updating status", err);
-      // TODO: show toast or revert status if you want
     }
   };
 
   return (
     <div className="nav-right">
-      <p className="UsersName">John Doe</p>
+      {/* REAL USER NAME */}
+      <p className="UsersName">{userName}</p>
 
       {/* STATUS DROPDOWN */}
       <div className="status-selector">
@@ -67,7 +67,7 @@ function NavbarRightSide() {
         </select>
       </div>
 
-      <a href={"#"} className={"NotificationBell"}>
+      <a href="#" className="NotificationBell">
         <img className="bell" src={notification} alt="Notification Bell" />
       </a>
 
