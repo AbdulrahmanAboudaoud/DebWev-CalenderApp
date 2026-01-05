@@ -1,9 +1,11 @@
 using backend.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace backend.Controllers;
 
+[Authorize]
 [ApiController]
 [Route("api/[controller]")]
 public class UsersController : ControllerBase
@@ -16,6 +18,7 @@ public class UsersController : ControllerBase
     }
 
     // GET methods
+    [Authorize(Policy = "RequireAdminRole")]
     [HttpGet] // gets all users
     public async Task<ActionResult<IEnumerable<Employee>>> GetEmployees()
     {

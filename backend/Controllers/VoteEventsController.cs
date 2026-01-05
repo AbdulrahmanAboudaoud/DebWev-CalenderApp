@@ -1,7 +1,9 @@
 using backend.DTOs;
 using backend.Models;
 using backend.Services.VoteEventService;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace backend.Controllers;
 

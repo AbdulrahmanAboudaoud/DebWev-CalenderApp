@@ -87,6 +87,12 @@ builder.Services
         };
     });
 
+// Adds Authorization policies, later to be used in Controllers
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("RequireAdminRole", policy => policy.RequireRole("Admin"));
+});
+
 // Swagger - MUST be here, before builder.Build()
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -110,7 +116,7 @@ try
         var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
 
         // Gotta create that db am I right fellas
-        db.Database.EnsureCreated(); 
+        db.Database.EnsureCreated();
 
         // ONE-TIME: hash existing plain-text passwords (keeps your old DB)
         var employees = db.Employees.ToList();
