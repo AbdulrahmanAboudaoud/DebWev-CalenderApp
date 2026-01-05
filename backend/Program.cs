@@ -14,6 +14,7 @@ using backend.Services.AuthService;
 using BCrypt.Net;
 using backend.Services.RoomBookingService;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.OpenApi.Models;
 
 // using FluentValidation;
 // using FluentValidation.AspNetCore;
@@ -39,7 +40,8 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 builder.Services.AddControllers()
     .AddJsonOptions(options =>
     {
-        options.JsonSerializerOptions.ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.IgnoreCycles;
+        options.JsonSerializerOptions.ReferenceHandler =
+            System.Text.Json.Serialization.ReferenceHandler.IgnoreCycles;
     });
 
 // GUYS ADD YOUR SERVICES HERE!!
@@ -104,7 +106,41 @@ builder.Services.AddAuthorization(options =>
 
 // Swagger - MUST be here, before builder.Build()
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+
+// Swagger config with JWT Bearer support (shows Authorize input)
+builder.Services.AddSwaggerGen(options =>
+{
+    options.SwaggerDoc("v1", new OpenApiInfo
+    {
+        Title = "Calendar App API",
+        Version = "v1"
+    });
+
+    options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+    {
+        Name = "Authorization",
+        Type = SecuritySchemeType.Http,
+        Scheme = "Bearer",
+        BearerFormat = "JWT",
+        In = ParameterLocation.Header,
+        Description = "Enter: Bearer <your JWT token>"
+    });
+
+    options.AddSecurityRequirement(new OpenApiSecurityRequirement
+    {
+        {
+            new OpenApiSecurityScheme
+            {
+                Reference = new OpenApiReference
+                {
+                    Type = ReferenceType.SecurityScheme,
+                    Id = "Bearer"
+                }
+            },
+            Array.Empty<string>()
+        }
+    });
+});
 
 // Ensure Data directory exists
 var dataDirectory = Path.Combine(Directory.GetCurrentDirectory(), "Data");
@@ -124,7 +160,7 @@ try
     {
         var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
 
-        // Gotta create that db am I right fellas
+        // Create DB if not exists (basic)
         db.Database.EnsureCreated();
 
         // ONE-TIME: hash existing plain-text passwords (keeps your old DB)
@@ -182,8 +218,6 @@ try
             );
             db.SaveChanges();
         }
-
-
 
         // Seed Rooms (only if empty)
         if (!db.Rooms.Any())
