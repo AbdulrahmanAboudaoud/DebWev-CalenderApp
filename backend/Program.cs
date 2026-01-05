@@ -111,7 +111,7 @@ builder.Services.AddEndpointsApiExplorer();
 // Swagger config with JWT Bearer support (shows Authorize input)
 builder.Services.AddSwaggerGen(options =>
 {
-    options.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo 
+    options.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo
     {
         Title = "Calendar App API",
         Version = "v1"
@@ -428,7 +428,7 @@ app.UseSwagger();
 app.UseSwaggerUI();
 
 // logging middleware 
-app.UseMiddleware<LoggingMiddleware>();
+//app.UseMiddleware<LoggingMiddleware>();
 
 app.UseCors("ReactApp");
 app.UseAuthentication();
@@ -451,7 +451,7 @@ public class AppDbContext : DbContext
     public DbSet<OfficeAttendance> OfficeAttendances => Set<OfficeAttendance>();
     public DbSet<Room> Rooms => Set<Room>();
     public DbSet<RoomBooking> RoomBookings => Set<RoomBooking>();
-    public DbSet<RequestLog> RequestLogs => Set<RequestLog>();
+    //public DbSet<RequestLog> RequestLogs => Set<RequestLog>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
