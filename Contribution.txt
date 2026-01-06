@@ -1,0 +1,10 @@
+Contribution:
+
+Telmo:
+Navbar (inlcuding mobile view), RoomBooking (frontend and backend), backend skeleton (from controllers to DTOs and such).
+
+Abdulrahman:
+Admin, Attendance, events and correspondent backend, JWT authenticatie, gebruikuserstatus-selector (in de navbar), swagger bijgewerkt dat authenticatie werkt.
+
+Kacper:
+Home page (including calendar, add events, etc), events and correspondent backend.
